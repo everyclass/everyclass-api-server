@@ -1,0 +1,10 @@
+{
+  "require": {
+    "slim/slim": "^3.12",
+    "mongodb/mongodb": "^1.4",
+    "sentry/sentry": "^1.0",
+    "ext-mongodb": "*",
+    "ext-mysqli": "*",
+    "ext-json": "*"
+  }
+}
