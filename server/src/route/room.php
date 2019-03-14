@@ -47,6 +47,10 @@ $app->group('/room', function (App $app) {
 
             $result = [];
             while ($stmt->fetch()) {
+                // 对每个数据进行数据转换
+                $course_week = json_decode($course_week, true);
+
+                // 完成数据的映射处理
                 $result['code'] = $room_rid;
                 $result['name'] = $room_name;
                 $result['building'] = $room_building;
@@ -57,7 +61,7 @@ $app->group('/room', function (App $app) {
                 $result[$course_code]['course_code'] = $course_code;
                 $result[$course_code]['room'] = $course_room;
                 $result[$course_code]['room_code'] = $room_code;
-                $result[$course_code]['week'] = json_decode($course_week, true);
+                $result[$course_code]['week'] = $course_week;
                 $result[$course_code]['lesson'] = $course_lesson;
 
                 $result[$course_code]['teacher'] [] = [

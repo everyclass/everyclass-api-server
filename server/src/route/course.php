@@ -47,8 +47,12 @@ $app->group('/course', function (App $app) {
 
             $result = [];
             while ($stmt->fetch()) {
+                // 对每个数据进行数据转换
+                $course_week = json_decode($course_week, true);
+
+                // 完成数据的映射处理
                 $result['name'] = $course_name;
-                $result['klass_code'] = $klass_code;
+                $result['course_code'] = $klass_code;
                 $result['room'] = $course_room;
                 $result['room_code'] = $room_code;
                 $result['week'] = $course_week;
@@ -61,7 +65,7 @@ $app->group('/course', function (App $app) {
                 $result['student'] [] = $student_code;
                 $result[$student_code]['name'] = $student_name;
                 $result[$student_code]['code'] = $student_code;
-                $result[$student_code]['klass'] = $student_klass;
+                $result[$student_code]['class'] = $student_klass;
                 $result[$student_code]['deputy'] = $student_deputy;
 
                 $result['teacher'] [] = $teacher_code;

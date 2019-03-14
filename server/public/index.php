@@ -39,7 +39,7 @@ require __DIR__ . '/../src/middleware.php';
 // 注册网络路由
 require __DIR__ . '/../src/route/info.php';
 require __DIR__ . '/../src/route/room.php';
-require __DIR__ . '/../src/route/klass.php';
+require __DIR__ . '/../src/route/course.php';
 require __DIR__ . '/../src/route/student.php';
 require __DIR__ . '/../src/route/teacher.php';
 
