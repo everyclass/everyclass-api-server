@@ -2,15 +2,15 @@
 /**
  * Created by PhpStorm.
  * User: wolfbolin
- * Date: 2019/3/12
- * Time: 16:41
+ * Date: 2019/3/15
+ * Time: 0:48
  */
 
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
-$app->group('/room', function (App $app) {
+$app->group('/student', function (App $app) {
     $app->get('', function (Request $request, Response $response) {
         $result = ['status' => 'success', 'info' => 'Hello, room!'];
         return $response->withJson($result);
@@ -34,24 +34,28 @@ $app->group('/room', function (App $app) {
                 goto Bad_request;
             }
 
+            // 查询数据库的学生信息
+            $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['occam']);
+            $collection = $db->selectCollection('student');
+            $select_result = $collection->findOne(
+                ['code' => $identifier],
+                ['projection' => ['_id' => 0]]
+            );
+            $result = (array)$select_result->getArrayCopy();
+            $result['semester_list'] = (array)$result['semester'];
+            unset($result['semester']);
+
             // 在数据库中查询数据
             $mysqli = $this->get('mysql_client');
             mysqli_select_db($mysqli, $this->get('MySQL')['occam']);
-            $sql = str_replace('template', $semester, $this->get('SQL')['room']);
+            $sql = str_replace('template', $semester, $this->get('SQL')['student']);
             $stmt = mysqli_prepare($mysqli, $sql);
             mysqli_stmt_bind_param($stmt, "s", $identifier);
             mysqli_stmt_execute($stmt);
-            $stmt->bind_result($room_rid, $room_name, $room_building,
-                $room_campus, $course_name, $course_code, $course_room, $room_code, $course_week,
-                $course_lesson, $teacher_code, $teacher_name, $teacher_title);
+            $stmt->bind_result($course_name, $course_code, $course_room, $room_code,
+                $course_week, $course_lesson, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
 
-            $result = [];
             while ($stmt->fetch()) {
-                $result['code'] = $room_rid;
-                $result['name'] = $room_name;
-                $result['building'] = $room_building;
-                $result['campus'] = $room_campus;
-
                 $result['course'] [] = $course_code;
                 $result[$course_code]['name'] = $course_name;
                 $result[$course_code]['course_code'] = $course_code;
@@ -81,6 +85,5 @@ $app->group('/room', function (App $app) {
             Not_found:
             return WolfBolin\Slim\HTTP\Not_found($response);
         });
-
 });
 

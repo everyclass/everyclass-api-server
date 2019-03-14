@@ -56,6 +56,42 @@ return [
             LEFT JOIN `teacher_link_template` AS t_link USING(cid) 
             LEFT JOIN `student_template` AS student USING(sid)
             LEFT JOIN `teacher_template` as teacher USING(tid)
-            WHERE `klassID` = ?'
+            WHERE `klassID` = ?',
+        'student' => '
+            SELECT 
+            `card`.`name`,
+            `card`.`klassID`,
+            `card`.`room`,
+            `card`.`roomID`,
+            `card`.`week`,
+            `card`.`lesson`,
+            `teacher`.`name`,
+            `teacher`.`code`,
+            `teacher`.`title`,
+            `teacher`.`unit`
+            FROM `student_template` as student
+            JOIN `student_link_template` as s_link USING(sid) 
+            JOIN `card_template` as card USING(cid)
+            JOIN `teacher_link_template` as t_link USING(cid)
+            JOIN `teacher_template` as teacher USING(tid)
+            WHERE student.`code` = ?',
+        'teacher' => '
+            SELECT 
+            `card`.`name`,
+            `card`.`klassID`,
+            `card`.`room`,
+            `card`.`roomID`,
+            `card`.`week`,
+            `card`.`lesson`,
+            `c_teacher`.`code`,
+            `c_teacher`.`name`, 
+            `c_teacher`.`title`,
+            `c_teacher`.`unit`
+            FROM `teacher_template` as teacher
+            JOIN `teacher_link_template` as teacher2card ON teacher.tid = teacher2card.tid
+            JOIN `card_template` as card ON teacher2card.cid = card.cid
+            JOIN `teacher_link_template` as card2teacher ON card.cid = card2teacher.cid
+            JOIN `teacher_template` as c_teacher ON card2teacher.tid = c_teacher.tid 
+            WHERE teacher.`code` = ?'
     ]
 ];

@@ -40,6 +40,9 @@ require __DIR__ . '/../src/middleware.php';
 require __DIR__ . '/../src/route/info.php';
 require __DIR__ . '/../src/route/room.php';
 require __DIR__ . '/../src/route/klass.php';
+require __DIR__ . '/../src/route/student.php';
+require __DIR__ . '/../src/route/teacher.php';
+
 
 // 运行应用程序
 try {
