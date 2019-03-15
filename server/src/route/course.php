@@ -96,5 +96,5 @@ $app->group('/course', function (App $app) {
             return WolfBolin\Slim\HTTP\Not_found($response);
         });
 
-});
+})->add(WolfBolin\Slim\Middleware\x_auth_token());
 

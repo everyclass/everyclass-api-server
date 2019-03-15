@@ -99,4 +99,4 @@ $app->group('/teacher', function (App $app) {
             Not_found:
             return WolfBolin\Slim\HTTP\Not_found($response);
         });
-});
+})->add(WolfBolin\Slim\Middleware\x_auth_token());

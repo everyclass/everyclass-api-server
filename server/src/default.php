@@ -14,7 +14,7 @@ return [
     'MongoDB' => [
         'occam' => '',
         'entity' => '',
-        'host' => '',  // 192.168.80.83
+        'host' => '',
         'port' => '',
         'username' => '',
         'password' => '',
