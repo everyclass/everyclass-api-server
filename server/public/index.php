@@ -20,6 +20,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // 注册私有工具
 require __DIR__ . '/../src/util/http_response.php';
+require __DIR__ . '/../src/util/tools.php';
 
 
 // 注册配置数据

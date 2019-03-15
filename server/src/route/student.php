@@ -10,6 +10,8 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+use WolfBolin\Everyclass\Tools as Tools;
+
 $app->group('/student', function (App $app) {
     $app->get('', function (Request $request, Response $response) {
         $result = ['status' => 'success', 'info' => 'Hello, room!'];
@@ -72,6 +74,7 @@ $app->group('/student', function (App $app) {
                 $course_list[$course_code]['room'] = $course_room;
                 $course_list[$course_code]['room_code'] = $room_code;
                 $course_list[$course_code]['week'] = $course_week;
+                $course_list[$course_code]['week_str'] = Tools\week_encode($course_list[$course_code]['week']);
                 $course_list[$course_code]['lesson'] = $course_lesson;
 
                 $course_list[$course_code]['teacher'] [] = [

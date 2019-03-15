@@ -10,6 +10,8 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+use WolfBolin\Everyclass\Tools as Tools;
+
 $app->group('/course', function (App $app) {
     $app->get('', function (Request $request, Response $response) {
         $result = ['status' => 'success', 'info' => 'Hello, course!'];
@@ -79,6 +81,7 @@ $app->group('/course', function (App $app) {
             } else {
                 // 最后的处理
                 $result['semester'] = $semester;
+                $result['week_str'] = Tools\week_encode($result['week']);
                 $result['student'] = array_values($student_list);
                 $result['teacher'] = array_values($teacher_list);
             }
