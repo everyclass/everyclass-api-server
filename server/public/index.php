@@ -20,6 +20,7 @@ require __DIR__ . '/../vendor/autoload.php';
 
 // 注册私有工具
 require __DIR__ . '/../src/util/http_response.php';
+require __DIR__ . '/../src/util/tools.php';
 
 
 // 注册配置数据
@@ -34,7 +35,7 @@ $app = new Slim\App($parameter);
 require __DIR__ . '/../src/container.php';
 
 // 注册网络中间件
-require __DIR__ . '/../src/middleware.php';
+require __DIR__ . '/../src/util/middleware.php';
 
 // 注册网络路由
 require __DIR__ . '/../src/route/info.php';

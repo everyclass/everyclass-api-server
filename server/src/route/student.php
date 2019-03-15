@@ -10,6 +10,8 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+use WolfBolin\Everyclass\Tools as Tools;
+
 $app->group('/student', function (App $app) {
     $app->get('', function (Request $request, Response $response) {
         $result = ['status' => 'success', 'info' => 'Hello, room!'];
@@ -41,9 +43,15 @@ $app->group('/student', function (App $app) {
                 ['code' => $identifier],
                 ['projection' => ['_id' => 0]]
             );
-            $result = (array)$select_result->getArrayCopy();
-            $result['semester_list'] = (array)$result['semester'];
-            unset($result['semester']);
+            if($select_result){
+                // 此人信息存在
+                $result = (array)$select_result->getArrayCopy();
+                $result['available_semester'] = (array)$result['semester'];
+                $result['semester'] = $semester;
+            }else{
+                // 未找到此人信息
+                goto Not_found;
+            }
 
             // 在数据库中查询数据
             $mysqli = $this->get('mysql_client');
@@ -55,33 +63,35 @@ $app->group('/student', function (App $app) {
             $stmt->bind_result($course_name, $course_code, $course_room, $room_code,
                 $course_week, $course_lesson, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
 
+            $course_list = [];
             while ($stmt->fetch()) {
                 // 对每个数据进行数据转换
                 $course_week = json_decode($course_week, true);
 
                 // 完成数据的映射处理
-                $result['course'] [] = $course_code;
-                $result[$course_code]['name'] = $course_name;
-                $result[$course_code]['course_code'] = $course_code;
-                $result[$course_code]['room'] = $course_room;
-                $result[$course_code]['room_code'] = $room_code;
-                $result[$course_code]['week'] = $course_week;
-                $result[$course_code]['lesson'] = $course_lesson;
+                $course_list[$course_code]['name'] = $course_name;
+                $course_list[$course_code]['course_code'] = $course_code;
+                $course_list[$course_code]['room'] = $course_room;
+                $course_list[$course_code]['room_code'] = $room_code;
+                $course_list[$course_code]['week'] = $course_week;
+                $course_list[$course_code]['week_str'] = Tools\week_encode($course_list[$course_code]['week']);
+                $course_list[$course_code]['lesson'] = $course_lesson;
 
-                $result[$course_code]['teacher'] [] = [
+                $course_list[$course_code]['teacher'] [] = [
                     'code' => $teacher_code,
                     'name' => $teacher_name,
                     'title' => $teacher_title
                 ];
             }
-            if (count($result) < 1) {
+            if (count($course_list) < 1) {
                 goto Not_found;
             } else {
-                $result['course'] = array_values(array_unique($result['course']));
+                $result['course'] = array_values($course_list);
             }
 
 
             // 将字典数据写入请求响应
+            $result = array_merge($result, ['status' => 'success']);
             return $response->withJson($result);
             // 异常访问出口
             Bad_request:
@@ -89,5 +99,5 @@ $app->group('/student', function (App $app) {
             Not_found:
             return WolfBolin\Slim\HTTP\Not_found($response);
         });
-});
+})->add(WolfBolin\Slim\Middleware\x_auth_token());
 

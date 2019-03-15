@@ -10,6 +10,8 @@ use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
+use WolfBolin\Everyclass\Tools as Tools;
+
 $app->group('/room', function (App $app) {
     $app->get('', function (Request $request, Response $response) {
         $result = ['status' => 'success', 'info' => 'Hello, room!'];
@@ -46,6 +48,7 @@ $app->group('/room', function (App $app) {
                 $course_lesson, $teacher_code, $teacher_name, $teacher_title);
 
             $result = [];
+            $course_list = [];
             while ($stmt->fetch()) {
                 // 对每个数据进行数据转换
                 $course_week = json_decode($course_week, true);
@@ -56,15 +59,15 @@ $app->group('/room', function (App $app) {
                 $result['building'] = $room_building;
                 $result['campus'] = $room_campus;
 
-                $result['course'] [] = $course_code;
-                $result[$course_code]['name'] = $course_name;
-                $result[$course_code]['course_code'] = $course_code;
-                $result[$course_code]['room'] = $course_room;
-                $result[$course_code]['room_code'] = $room_code;
-                $result[$course_code]['week'] = $course_week;
-                $result[$course_code]['lesson'] = $course_lesson;
+                $course_list[$course_code]['name'] = $course_name;
+                $course_list[$course_code]['course_code'] = $course_code;
+                $course_list[$course_code]['room'] = $course_room;
+                $course_list[$course_code]['room_code'] = $room_code;
+                $course_list[$course_code]['week'] = $course_week;
+                $course_list[$course_code]['week_str'] = Tools\week_encode($course_list[$course_code]['week']);
+                $course_list[$course_code]['lesson'] = $course_lesson;
 
-                $result[$course_code]['teacher'] [] = [
+                $course_list[$course_code]['teacher'] [] = [
                     'code' => $teacher_code,
                     'name' => $teacher_name,
                     'title' => $teacher_title
@@ -73,11 +76,14 @@ $app->group('/room', function (App $app) {
             if (count($result) < 1) {
                 goto Not_found;
             } else {
-                $result['course'] = array_values(array_unique($result['course']));
+                // 最后的处理
+                $result['semester'] = $semester;
+                $result['course'] = array_values($course_list);
             }
 
 
             // 将字典数据写入请求响应
+            $result = array_merge($result, ['status' => 'success']);
             return $response->withJson($result);
             // 异常访问出口
             Bad_request:
@@ -86,5 +92,5 @@ $app->group('/room', function (App $app) {
             return WolfBolin\Slim\HTTP\Not_found($response);
         });
 
-});
+})->add(WolfBolin\Slim\Middleware\x_auth_token());
 

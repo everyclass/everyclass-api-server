@@ -6,9 +6,10 @@
  * Time: 14:44
  */
 
+namespace WolfBolin\Slim\Middleware;
+
 use Slim\Http\Request;
 use Slim\Http\Response;
-
 
 function x_auth_token() {
     $result = function (Request $request, Response $response, $next) {
