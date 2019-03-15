@@ -46,6 +46,8 @@ $app->group('/course', function (App $app) {
                 $student_klass, $student_deputy, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
 
             $result = [];
+            $student_list = [];
+            $teacher_list = [];
             while ($stmt->fetch()) {
                 // 对每个数据进行数据转换
                 $course_week = json_decode($course_week, true);
@@ -62,25 +64,24 @@ $app->group('/course', function (App $app) {
                 $result['hour'] = $course_hour;
                 $result['type'] = $course_type;
 
-                $result['student'] [] = $student_code;
-                $result[$student_code]['name'] = $student_name;
-                $result[$student_code]['code'] = $student_code;
-                $result[$student_code]['class'] = $student_klass;
-                $result[$student_code]['deputy'] = $student_deputy;
+                $student_list[$student_code]['name'] = $student_name;
+                $student_list[$student_code]['code'] = $student_code;
+                $student_list[$student_code]['class'] = $student_klass;
+                $student_list[$student_code]['deputy'] = $student_deputy;
 
-                $result['teacher'] [] = $teacher_code;
-                $result[$teacher_code]['name'] = $teacher_name;
-                $result[$teacher_code]['code'] = $teacher_code;
-                $result[$teacher_code]['title'] = $teacher_title;
-                $result[$teacher_code]['unit'] = $teacher_unit;
+                $teacher_list[$teacher_code]['name'] = $teacher_name;
+                $teacher_list[$teacher_code]['code'] = $teacher_code;
+                $teacher_list[$teacher_code]['title'] = $teacher_title;
+                $teacher_list[$teacher_code]['unit'] = $teacher_unit;
             }
             if (count($result) < 1) {
                 goto Not_found;
             } else {
-                $result['student'] = array_values(array_unique($result['student']));
-                $result['teacher'] = array_values(array_unique($result['teacher']));
+                // 最后的处理
+                $result['semester'] = $semester;
+                $result['student'] = array_values($student_list);
+                $result['teacher'] = array_values($teacher_list);
             }
-
 
             // 将字典数据写入请求响应
             return $response->withJson($result);
