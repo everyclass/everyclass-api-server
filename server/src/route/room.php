@@ -83,6 +83,7 @@ $app->group('/room', function (App $app) {
 
 
             // 将字典数据写入请求响应
+            $result = array_merge($result, ['status' => 'success']);
             return $response->withJson($result);
             // 异常访问出口
             Bad_request:

@@ -50,8 +50,8 @@ $app->group('/info', function (App $app) {
             if ($db->select_db($this->get('MySQL')['entity'])) {
                 $sql = "SELECT `value` FROM `info` WHERE `key`='check_code';";
                 if ($result = $db->query($sql)) {
-                    $result = $result->fetch_assoc();
-                    if ($result[0] == $this->get('MySQL_Token')) {
+                    $result = $result->fetch_row();
+                    if ($result && $result[0] == $this->get('MySQL_Token')) {
                         $check_list['MySQL connection'] = true;
                         goto Next;
                     }
