@@ -22,6 +22,19 @@ $app->group('/info', function (App $app) {
         return $response->withJson($result);
     });
 
+    $app->get('/update_time', function(Request $request, Response $response){
+        $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
+        $collection = $db->selectCollection('info');
+        $select_result = $collection->findOne(
+            ['key' => 'update_time']
+        );
+        $result = [
+            'status' => 'success',
+            'info' => $select_result['value']
+        ];
+        return $response->withJson($result);
+    });
+
     $app->get('/healthy', function (Request $request, Response $response) {
         // 初始化健康检查列表
         $check_list = $this->get('Check_list');
@@ -74,7 +87,7 @@ $app->group('/info', function (App $app) {
         }
         $result = array_merge($result, $check_list);
         return $response->withJson($result);
-    });
+    })->add(\WolfBolin\Slim\Middleware\x_auth_token());
 
 })->add(\WolfBolin\Slim\Middleware\access_record());
 
