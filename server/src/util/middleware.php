@@ -8,8 +8,8 @@
 
 namespace WolfBolin\Slim\Middleware;
 
-use Slim\Http\Request;
-use Slim\Http\Response;
+use \Slim\Http\Request;
+use \Slim\Http\Response;
 
 function x_auth_token() {
     $result = function (Request $request, Response $response, $next) {
@@ -25,6 +25,32 @@ function x_auth_token() {
             $error_info = ["status" => "error", "info" => "需要进行身份验证"];
             return $response->withStatus(401)->withJson($error_info);
         }
+    };
+    return $result;
+}
+
+
+function access_record() {
+    $result = function (Request $request, Response $response, $next) {
+        $http_result = $next($request, $response);
+        $db = new \MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
+        $collection = $db->selectCollection('record');
+        $collection->insertOne([
+            'code' => $response->getStatusCode(),
+            'method' => $request->getMethod(),
+            'scheme' => $request->getUri()->getScheme(),
+            'host' => $request->getUri()->getHost(),
+            'port' => $request->getUri()->getPort(),
+            'path' => $request->getUri()->getPath(),
+            'query' => $request->getUri()->getQuery(),
+            'fragment' => $request->getUri()->getFragment(),
+            'user_info' => $request->getUri()->getUserInfo(),
+            'authority' => $request->getUri()->getAuthority(),
+            'header' => $request->getHeaders(),
+            'time' => time(),
+            'date' => date("Y-m-d H:i:s")
+        ]);
+        return $http_result;
     };
     return $result;
 }

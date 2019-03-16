@@ -6,9 +6,9 @@
  * Time: 14:55
  */
 
-use Slim\App;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use \Slim\App;
+use \Slim\Http\Request;
+use \Slim\Http\Response;
 
 $app->group('/info', function (App $app) {
     $app->get('/hello_world', function (Request $request, Response $response) {
@@ -61,7 +61,6 @@ $app->group('/info', function (App $app) {
         $check_list['MySQL connection'] = false;
         Next:
 
-
         // 反馈检查结果
         $result = [
             'status' => 'success',
@@ -77,6 +76,6 @@ $app->group('/info', function (App $app) {
         return $response->withJson($result);
     });
 
-});
+})->add(\WolfBolin\Slim\Middleware\access_record());
 
 

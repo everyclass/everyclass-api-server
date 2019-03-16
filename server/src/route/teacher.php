@@ -6,11 +6,11 @@
  * Time: 1:33
  */
 
-use Slim\App;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use \Slim\App;
+use \Slim\Http\Request;
+use \Slim\Http\Response;
 
-use WolfBolin\Everyclass\Tools as Tools;
+use \WolfBolin\Everyclass\Tools as Tools;
 
 $app->group('/teacher', function (App $app) {
     $app->get('', function (Request $request, Response $response) {
@@ -43,12 +43,12 @@ $app->group('/teacher', function (App $app) {
                 ['code' => $identifier],
                 ['projection' => ['_id' => 0]]
             );
-            if($select_result){
+            if ($select_result) {
                 // 此人信息存在
                 $result = (array)$select_result->getArrayCopy();
                 $result['available_semester'] = (array)$result['semester'];
                 $result['semester'] = $semester;
-            }else{
+            } else {
                 // 未找到此人信息
                 goto Not_found;
             }
@@ -95,8 +95,9 @@ $app->group('/teacher', function (App $app) {
             return $response->withJson($result);
             // 异常访问出口
             Bad_request:
-            return WolfBolin\Slim\HTTP\Bad_request($response);
+            return \WolfBolin\Slim\HTTP\Bad_request($response);
             Not_found:
-            return WolfBolin\Slim\HTTP\Not_found($response);
+            return \WolfBolin\Slim\HTTP\Not_found($response);
         });
-})->add(WolfBolin\Slim\Middleware\x_auth_token());
+})->add(\WolfBolin\Slim\Middleware\x_auth_token())
+    ->add(\WolfBolin\Slim\Middleware\access_record());
