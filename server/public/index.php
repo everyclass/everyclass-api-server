@@ -5,6 +5,10 @@
  * Date: 2019/3/11
  * Time: 14:36
  */
+
+// PHP启动设置
+date_default_timezone_set('Asia/Shanghai');
+
 // 处理全局异常数据
 error_reporting(E_ALL);
 set_error_handler(function ($severity, $message, $file, $line) {

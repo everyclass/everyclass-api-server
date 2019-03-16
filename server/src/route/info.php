@@ -6,9 +6,9 @@
  * Time: 14:55
  */
 
-use Slim\App;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use \Slim\App;
+use \Slim\Http\Request;
+use \Slim\Http\Response;
 
 $app->group('/info', function (App $app) {
     $app->get('/hello_world', function (Request $request, Response $response) {
@@ -19,6 +19,19 @@ $app->group('/info', function (App $app) {
     $app->get('/version', function (Request $request, Response $response) {
         $version = $this->get('Version');
         $result = ['status' => 'success', 'info' => "线上版本：$version", 'version' => $version];
+        return $response->withJson($result);
+    });
+
+    $app->get('/data_time', function(Request $request, Response $response){
+        $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
+        $collection = $db->selectCollection('info');
+        $select_result = $collection->findOne(
+            ['key' => 'update_time']
+        );
+        $result = [
+            'status' => 'success',
+            'info' => $select_result['value']
+        ];
         return $response->withJson($result);
     });
 
@@ -61,7 +74,6 @@ $app->group('/info', function (App $app) {
         $check_list['MySQL connection'] = false;
         Next:
 
-
         // 反馈检查结果
         $result = [
             'status' => 'success',
@@ -75,8 +87,8 @@ $app->group('/info', function (App $app) {
         }
         $result = array_merge($result, $check_list);
         return $response->withJson($result);
-    });
+    })->add(\WolfBolin\Slim\Middleware\x_auth_token());
 
-});
+})->add(\WolfBolin\Slim\Middleware\access_record());
 
 

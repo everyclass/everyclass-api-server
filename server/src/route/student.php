@@ -6,11 +6,11 @@
  * Time: 0:48
  */
 
-use Slim\App;
-use Slim\Http\Request;
-use Slim\Http\Response;
+use \Slim\App;
+use \Slim\Http\Request;
+use \Slim\Http\Response;
 
-use WolfBolin\Everyclass\Tools as Tools;
+use \WolfBolin\Everyclass\Tools as Tools;
 
 $app->group('/student', function (App $app) {
     $app->get('', function (Request $request, Response $response) {
@@ -95,9 +95,10 @@ $app->group('/student', function (App $app) {
             return $response->withJson($result);
             // 异常访问出口
             Bad_request:
-            return WolfBolin\Slim\HTTP\Bad_request($response);
+            return \WolfBolin\Slim\HTTP\Bad_request($response);
             Not_found:
-            return WolfBolin\Slim\HTTP\Not_found($response);
+            return \WolfBolin\Slim\HTTP\Not_found($response);
         });
-})->add(WolfBolin\Slim\Middleware\x_auth_token());
+})->add(\WolfBolin\Slim\Middleware\x_auth_token())
+    ->add(\WolfBolin\Slim\Middleware\access_record());
 
