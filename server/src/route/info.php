@@ -22,7 +22,7 @@ $app->group('/info', function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/data_time', function(Request $request, Response $response){
+    $app->get('/data_time', function (Request $request, Response $response) {
         $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
         $collection = $db->selectCollection('info');
         $select_result = $collection->findOne(
@@ -89,6 +89,7 @@ $app->group('/info', function (App $app) {
         return $response->withJson($result);
     })->add(\WolfBolin\Slim\Middleware\x_auth_token());
 
-})->add(\WolfBolin\Slim\Middleware\access_record());
+})->add(\WolfBolin\Slim\Middleware\maintenance_mode())
+    ->add(\WolfBolin\Slim\Middleware\access_record());
 
 

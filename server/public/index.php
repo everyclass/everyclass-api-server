@@ -43,6 +43,7 @@ require __DIR__ . '/../src/util/middleware.php';
 
 // 注册网络路由
 require __DIR__ . '/../src/route/info.php';
+require __DIR__ . '/../src/route/search.php';
 require __DIR__ . '/../src/route/room.php';
 require __DIR__ . '/../src/route/course.php';
 require __DIR__ . '/../src/route/student.php';

@@ -100,5 +100,6 @@ $app->group('/student', function (App $app) {
             return \WolfBolin\Slim\HTTP\Not_found($response);
         });
 })->add(\WolfBolin\Slim\Middleware\x_auth_token())
+    ->add(\WolfBolin\Slim\Middleware\maintenance_mode())
     ->add(\WolfBolin\Slim\Middleware\access_record());
 
