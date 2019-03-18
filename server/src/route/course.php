@@ -97,5 +97,6 @@ $app->group('/course', function (App $app) {
         });
 
 })->add(\WolfBolin\Slim\Middleware\x_auth_token())
+    ->add(\WolfBolin\Slim\Middleware\maintenance_mode())
     ->add(\WolfBolin\Slim\Middleware\access_record());
 
