@@ -7,6 +7,7 @@ COPY . /www
 
 RUN pecl install mongodb \
 	&& docker-php-ext-enable mongodb \
+	&& docker-php-ext-install mysqli \
 	&& php -r "copy('https://cdn.tinoy.xyz/composer-setup.php', 'composer-setup.php');" \
 	&& php composer-setup.php \
 	&& php -r "unlink('composer-setup.php');" \
