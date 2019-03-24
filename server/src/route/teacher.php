@@ -38,7 +38,7 @@ $app->group('/teacher', function (App $app) {
 
             // 查询数据库的学生信息
             $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['occam']);
-            $collection = $db->selectCollection('teacher');
+            $collection = $db->selectCollection('search');
             $select_result = $collection->findOne(
                 ['code' => $identifier],
                 ['projection' => ['_id' => 0]]

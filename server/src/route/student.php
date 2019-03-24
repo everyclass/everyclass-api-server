@@ -14,7 +14,7 @@ use \WolfBolin\Everyclass\Tools as Tools;
 
 $app->group('/student', function (App $app) {
     $app->get('', function (Request $request, Response $response) {
-        $result = ['status' => 'success', 'info' => 'Hello, room!'];
+        $result = ['status' => 'success', 'info' => 'Hello, student!'];
         return $response->withJson($result);
     });
 
@@ -38,7 +38,7 @@ $app->group('/student', function (App $app) {
 
             // 查询数据库的学生信息
             $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['occam']);
-            $collection = $db->selectCollection('student');
+            $collection = $db->selectCollection('search');
             $select_result = $collection->findOne(
                 ['code' => $identifier],
                 ['projection' => ['_id' => 0]]
