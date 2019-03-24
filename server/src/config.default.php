@@ -2,13 +2,13 @@
 /**
  * Created by PhpStorm.
  * User: wolfbolin
- * Date: 2019/3/11
- * Time: 14:51
+ * Date: 2019/3/22
+ * Time: 16:59
  */
+
 return [
     'Version' => '',
     'Sentry_DSN' => '',
-    'Auth_Token' => '',
     'Mongo_Token' => '',
     'MySQL_Token' => '',
     'MongoDB' => [
