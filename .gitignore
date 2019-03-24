@@ -1,6 +1,6 @@
 # For wolfbolin
 .idea
-server/src/config.php
+config.php
 
 
 # For Laravel
