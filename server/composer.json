@@ -6,5 +6,11 @@
     "ext-mongodb": "*",
     "ext-mysqli": "*",
     "ext-json": "*"
+  },
+  "repositories": {
+    "packagist": {
+      "type": "composer",
+      "url": "https://packagist.phpcomposer.com"
+    }
   }
 }

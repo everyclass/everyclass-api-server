@@ -45,6 +45,7 @@ function access_record() {
         $collection = $db->selectCollection('record');
         $collection->insertOne([
             'role' => $http_result->hasHeader('X-Auth-User') ? $http_result->getHeader('X-Auth-User')[0] : "guest",
+            'addr' => $_SERVER['REMOTE_ADDR'],
             'code' => $response->getStatusCode(),
             'method' => $request->getMethod(),
             'scheme' => $request->getUri()->getScheme(),
