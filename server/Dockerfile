@@ -4,7 +4,8 @@ MAINTAINER WolfBolin.com
 WORKDIR /www
 
 RUN apt-get update \
-	&& apt-get install git -y \
+	&& apt-get install git -y --no-install-recommends \
+	&& rm -rf /var/lib/apt/lists/* \
 	&& pecl install mongodb \
 	&& docker-php-ext-enable mongodb \
 	&& docker-php-ext-install mysqli \
