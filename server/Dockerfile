@@ -1,5 +1,5 @@
 FROM php:7.2.16-cli-stretch
-MAINTAINER WolfBolin.com
+MAINTAINER WolfBolin wolfbolin@foxmail.com
 
 WORKDIR /www
 
