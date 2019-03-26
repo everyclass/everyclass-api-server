@@ -107,7 +107,7 @@
 
 ### 查询课程信息
 
-* URL：`{host}/course/{学期}/{课程编号]`
+* URL：`{host}/course/{课程编号}/timetable/{学期}`
 * 方式：`GET`
 * 说明：
   * 学期格式形如：`2018-2019-1`
@@ -117,7 +117,7 @@
 * 请求示例：
 
   ```
-  {host}/course/2018-2019-1/0D8EAEC14F3E4EE38C039C6072218FA7
+  {host}/course/0D8EAEC14F3E4EE38C039C6072218FA7/timetable/2018-2019-1
   ```
 
 * 响应示例：
@@ -164,7 +164,7 @@
 
 ### 查询教室信息
 
-- URL：`{host}/room/{学期}/{教室编号}`
+- URL：`{host}/room/{教室编号}/timetable/{学期}`
 
 - 方式：`GET`
 
@@ -177,7 +177,7 @@
 - 请求示例：
 
   ```
-  {host}/room/2018-2019-1/2430402
+  {host}/room/2430402/timetable/2018-2019-1
   ```
 
 - 响应示例：
@@ -230,7 +230,7 @@
 
 ### 查询学生信息
 
-- URL：`{host}/student/{学期}/{学生编号}`
+- URL：`{host}/student/{学生编号}/timetable/{学期}`
 - 方式：`GET`
 - 说明：
   - 学期格式形如：`2018-2019-1`
@@ -240,7 +240,7 @@
 - 请求示例：
 
   ```
-  {host}/student/2018-2019-1/3901160407
+  {host}/student/3901160407/timetable/2018-2019-1
   ```
 
 - 响应示例：
@@ -301,7 +301,7 @@
 
 ### 查询教师信息
 
-- URL：`{host}/teacher/{学期}/{教师编号}`
+- URL：`{host}/teacher/{教师编号}/timetable/{学期}`
 
 - 方式：`GET`
 
@@ -313,7 +313,7 @@
 - 请求示例：
 
     ```
-    {host}/teacher/2018-2019-1/3901160407
+    {host}/teacher/3901160407/timetable/2018-2019-1
     ```
 
 - 响应示例：
@@ -378,7 +378,7 @@
 
 ### 链接测试
 
-- URL：`{host}/info/hello_world`
+- URL：`{host}`
 
 - 方式：`GET`
 
@@ -390,7 +390,7 @@
 - 请求示例：
 
   ```
-  {host}/info/hello_world
+  {host}
   ```
 
 - 响应示例：
@@ -402,21 +402,24 @@
   }
   ```
 
-### 接口版本
+### 服务信息
 
-- URL：`{host}/info/version`
+- URL：`{host}/info/service`
 
 - 方式：`GET`
 
 - 说明：
 
-  - 学期格式形如：`2018-2019-1`
-  - 课程编号格式：编号包含数字与字母
+  - status：响应状态
+  - version：接口版本
+  - service_state：服务状态
+  - service_notice：服务状态描述
+  - data_time：数据更新时间
 
 - 请求示例：
 
   ```
-  {host}/info/version
+  {host}/info/service
   ```
 
 - 响应示例：
@@ -424,8 +427,10 @@
   ```json
   {
       "status": "success",
-      "info": "线上版本：0.0.1",
-      "version": "0.0.1"
+      "version": "0.1.0",
+      "service_state": "running",
+      "service_notice": "服务正常运行",
+      "data_time": "2019-3-24"
   }
   ```
 
@@ -459,33 +464,6 @@
   ```
 
 
-### 数据时间
-
-- URL：`{host}/info/data_time
-
-- 方式：`GET`
-
-- 说明：
-
-  - 学期格式形如：`2018-2019-1`
-  - 课程编号格式：编号包含数字与字母
-
-- 请求示例：
-
-  ```
-  {host}/info/data_time
-  ```
-
-- 响应示例：
-
-  ```json
-  {
-      "status": "success",
-      "info": "2019-3-10"
-  }
-  ```
-
-  
 
 ## 数据字典
 
