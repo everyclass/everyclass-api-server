@@ -10,27 +10,38 @@ use \Slim\App;
 use \Slim\Http\Request;
 use \Slim\Http\Response;
 
+$app->get('/', function (Request $request, Response $response) {
+    $result = ['status' => 'success', 'info' => 'Hello, world!'];
+    return $response->withJson($result);
+});
+
 $app->group('/info', function (App $app) {
-    $app->get('/hello_world', function (Request $request, Response $response) {
-        $result = ['status' => 'success', 'info' => 'Hello, world!'];
-        return $response->withJson($result);
-    });
-
-    $app->get('/version', function (Request $request, Response $response) {
+    $app->get('/service', function (Request $request, Response $response) {
+        // 获取协议版本
         $version = $this->get('Version');
-        $result = ['status' => 'success', 'info' => "线上版本：$version", 'version' => $version];
-        return $response->withJson($result);
-    });
-
-    $app->get('/data_time', function (Request $request, Response $response) {
+        // 获取服务状态与服务描述
+        $db = new \MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
+        $collection = $db->selectCollection('info');
+        $service_state = $collection->findOne([
+            'key' => 'service_state'
+        ]);
+        $service_notice = $collection->findOne([
+            'key' => 'service_notice'
+        ]);
+        // 获取数据更新时间
         $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
         $collection = $db->selectCollection('info');
         $select_result = $collection->findOne(
             ['key' => 'update_time']
         );
+
+        // 组织响应数据
         $result = [
             'status' => 'success',
-            'info' => $select_result['value']
+            'version' => $version,
+            'service_state' => $service_state['value'],
+            'service_notice' => $service_notice['value'],
+            'data_time' => $select_result['value']
         ];
         return $response->withJson($result);
     });
@@ -87,9 +98,10 @@ $app->group('/info', function (App $app) {
         }
         $result = array_merge($result, $check_list);
         return $response->withJson($result);
-    })->add(\WolfBolin\Slim\Middleware\x_auth_token());
+    });
 
-})->add(\WolfBolin\Slim\Middleware\maintenance_mode())
+})->add(\WolfBolin\Slim\Middleware\x_auth_token())
+    ->add(\WolfBolin\Slim\Middleware\maintenance_mode())
     ->add(\WolfBolin\Slim\Middleware\access_record());
 
 
