@@ -16,11 +16,11 @@ $app->get('/', function (Request $request, Response $response) {
 });
 
 $app->group('/info', function (App $app) {
-    $app->get('/server', function (Request $request, Response $response) {
+    $app->get('/service', function (Request $request, Response $response) {
         // 获取协议版本
         $version = $this->get('Version');
         // 获取服务状态与服务描述
-        $db = new \MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['db']);
+        $db = new \MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
         $collection = $db->selectCollection('info');
         $service_state = $collection->findOne([
             'key' => 'service_state'
