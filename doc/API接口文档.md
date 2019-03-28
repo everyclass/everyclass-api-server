@@ -186,7 +186,7 @@
       "room_id": "2430402",
       "building": "世B",
       "campus": "铁道校区",
-      "course": [
+      "courses": [
           {
               "name": "毛泽东思想与中国特色社会主义理论体系概论",
               "course_id": "F3AA2FE5715C4CDFAAB1DDE56B500097",
