@@ -70,9 +70,9 @@
   ```json
   {
       "status": "success",
-      "data": [
+      "student_list": [
           {
-              "student_id": "0201130230",
+              "student_code": "0201130230",
               "name": "范海辛",
               "type": "student",
               "semesters": [
@@ -83,7 +83,7 @@
               "class": "城地1602"
           },
           {
-              "student_id": "0204130270",
+              "student_code": "0204130270",
               "name": "返魂香",
               "type": "student",
               "semesters": [
@@ -94,6 +94,10 @@
               "class": "城地1302"
           }
       ],
+      "teacher_list": [
+      ],
+      "room_list": [
+      ],
       "info": {
           "page_num": 1,
           "page_size": 5,
@@ -102,7 +106,6 @@
   }
   ```
 
-  
 
 ## 信息查询
 
@@ -125,35 +128,35 @@
   {
       "status": "success",
       "name": "Web应用开发技术",
-      "course_id": "0D8EAEC14F3E4EE38C039C6072218FA7",
+      "course_code": "0D8EAEC14F3E4EE38C039C6072218FA7",
       "type": "专业选修课",
       "weeks": [11,12,13,14,15,16,17,18],
       "week_string": "11-18/全周",
       "lesson": "10506",
       "union_name": "软件1701-03",
       "room": "世B502",
-      "room_id": "2430502",
+      "room_code": "2430502",
       "hour": 32,
       "picked": 95,
-      "students": [
+      "student_list": [
           {
               "name": "毕水秀",
-              "student_id": "1909170222",
+              "student_code": "1909170222",
               "class": "软件1703",
               "deputy": "软件学院"
           },
           {
               "name": "周福",
-              "student_id": "0304170106",
+              "student_code": "0304170106",
               "class": "软件1701",
               "deputy": "软件学院"
           },
           ...
       ],
-      "teachers": [
+      "teacher_list": [
           {
               "name": "外聘1",
-              "teacher_id": "0000187",
+              "teacher_code": "0000187",
               "title": "教授",
               "unit": "软件学院"
           }
@@ -183,21 +186,21 @@
   {
       "status": "success",
       "name": "世B402",
-      "room_id": "2430402",
+      "room_code": "2430402",
       "building": "世B",
       "campus": "铁道校区",
-      "courses": [
+      "course_list": [
           {
               "name": "毛泽东思想与中国特色社会主义理论体系概论",
-              "course_id": "F3AA2FE5715C4CDFAAB1DDE56B500097",
+              "course_code": "F3AA2FE5715C4CDFAAB1DDE56B500097",
               "room": "世B402",
-              "room_id": "2430402",
+              "room_code": "2430402",
               "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
               "week_string": "1-18/全周",
               "lesson": "10506",
-              "teachers": [
+              "teacher_list": [
                   {
-                      "teacher_id": "119043",
+                      "teacher_code": "119043",
                       "name": "胡厚荣",
                       "title": "高级政工师"
                   }
@@ -205,15 +208,15 @@
           },
           {
               "name": "毛泽东思想与中国特色社会主义理论体系概论",
-              "course_id": "AABF91ADE89244179D3587BB1CC2DF0E",
+              "course_code": "AABF91ADE89244179D3587BB1CC2DF0E",
               "room": "世B402",
-              "room_id": "2430402",
+              "room_code": "2430402",
               "weeks": [13,14,15,16,17,18],
               "week_string": "13-18/全周",
               "lesson": "40506",
-              "teacher": [
+              "teacher_list": [
                   {
-                      "teacher_id": "119043",
+                      "teacher_code": "119043",
                       "name": "胡厚荣",
                       "title": "高级政工师"
                   }
@@ -242,10 +245,10 @@
   {
       "status": "success",
       "name": "詹泽宇", 
-      "student_id": "3901160407",
+      "student_code": "3901160407",
       "deputy": "计算机学院",
       "class": "软件1604",
-      "semesters": [
+      "semester_list": [
           "2018-2019-1",
           "2016-2017-1",
           "2016-2017-2",
@@ -279,10 +282,10 @@
   {
       "status": "success",
       "name": "詹泽宇", 
-      "student_id": "3901160407",
+      "student_code": "3901160407",
       "deputy": "计算机学院",
       "class": "软件1604",
-      "semesters": [
+      "semester_list": [
           "2018-2019-1",
           "2016-2017-1",
           "2016-2017-2",
@@ -290,18 +293,18 @@
           "2017-2018-2",
           "2018-2019-2"
       ],
-      "courses": [
+      "course_list": [
           {
               "name": "日语（二外）",
-              "course_id": "10B1D23F9CFA4FC6BD885904C07FA7AB",
+              "course_code": "10B1D23F9CFA4FC6BD885904C07FA7AB",
               "room": "世B102",
-              "room_id": "2430102",
+              "room_code": "2430102",
               "weeks": [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
               "week_string": "3-18/全周",
               "lesson": "10102",
-              "teacher": [
+              "teacher_list": [
                   {
-                      "teacher_id": "702134",
+                      "teacher_code": "702134",
                       "name": "金涛",
                       "title": "讲师（高校）"
                   }
@@ -309,15 +312,15 @@
           },
           {
               "name": "云计算及应用",
-              "course_id": "23AA42B2C02544828961859CB0E2F1E2",
+              "course_code": "23AA42B2C02544828961859CB0E2F1E2",
               "room": "世B402",
-              "room_id": "2430402",
+              "room_code": "2430402",
               "weeks": [11,12,13,14,15,16,17,18],
               "week_string": "11-18/全周",
               "lesson": "30102",
-              "teacher": [
+              "teacher_list": [
                   {
-                      "teacher_id": "212178",
+                      "teacher_code": "212178",
                       "name": "邓磊",
                       "title": "副教授"
                   }
@@ -355,7 +358,7 @@
       "name": "邓磊",
       "title": "副教授",
       "unit": "软件学院",
-      "semesters": [
+      "semester_list": [
           "2018-2019-1",
           "2016-2017-1",
           "2016-2017-2",
@@ -390,7 +393,7 @@
       "name": "邓磊",
       "title": "副教授",
       "unit": "软件学院",
-      "semesters": [
+      "semester_list": [
           "2018-2019-1",
           "2016-2017-1",
           "2016-2017-2",
@@ -398,18 +401,18 @@
           "2017-2018-2",
           "2018-2019-2"
       ],
-      "courses": [
+      "course_list": [
           {
               "name": "大型数据库技术",
-              "course_id": "12E4C3DCB631491DB7F56F13873349C1",
+              "course_code": "12E4C3DCB631491DB7F56F13873349C1",
               "room": "世B402",
-              "room_id": "2430402",
+              "room_code": "2430402",
               "weeks": [3,4,5,6,7,8,9,10],
               "week_string": "3-10/全周",
               "lesson": "10102",
-              "teachers": [
+              "teacher_list": [
                   {
-                      "teacher_id": "邓磊",
+                      "teacher_code": "邓磊",
                       "name": "212178",
                       "title": "副教授"
                   }
@@ -417,15 +420,15 @@
           },
           {
               "name": "云计算及应用",
-              "course_id": "42654979C8F540BA9956AFF401E73F5B",
+              "course_code": "42654979C8F540BA9956AFF401E73F5B",
               "room": "世B402",
-              "room_id": "2430402",
+              "room_code": "2430402",
               "weeks": [11,12,13,14,15,16,17,18],
               "week_string": "11-18/全周",
               "lesson": "10102",
-              "teachers": [
+              "teacher_list": [
                   {
-                      "teacher_id": "邓磊",
+                      "teacher_code": "邓磊",
                       "name": "212178",
                       "title": "副教授"
                   }
@@ -524,23 +527,8 @@
 
 | 名称   | 含义                     | 类型 |
 | ------ | ------------------------ | ---- |
-| klass  | ~~非法字段，请反馈~~     |      |
+|        |                          |      |
 | course | 两个连续的课时           |      |
 | class  | 学生所属班级（非行政班） |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
-|        |                          |      |
 |        |                          |      |
 
