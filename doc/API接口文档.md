@@ -14,7 +14,7 @@
 
 ### API Key
 
-在使用前，你需要先申请 API Key。若无特别说明，以下接口均需要 API Key。API Key 的使用方法为在 HTTP Header 中加入 `X-API-KEY`，内容为你的 API Key。
+在使用前，你需要先申请 API Key。若无特别说明，以下接口均需要 API Key。API Key 的使用方法为在 HTTP Header 中加入 `X-Auth-Token`，内容为你的 API Key。
 
 
 
@@ -32,24 +32,30 @@
 
 ## 模糊搜索
 
-### 学生教师搜索
+### 综合搜索
 
-* URL：`/search/{搜索内容}`
+* URL：`/search/query?{搜索参数}`
 
 * 方法：`GET`
 
 * 参数（Query string）：
-  * `page_num`：数字，分页页数（从0计数）
-  * `page_size`：数字，分页大小（最小值为2，最大值为100）
+
+  * `key`：字符串，搜索值
+  * `type`：字符串数组、搜索分类（可在`student`,`teacher`中选择一项或多项）
+  * `page_size`：数字，分页大小（默认值20，最小值2，最大值100）
+  * `page_index`：数字，分页页数（默认值为1，从1计数的分页下标）
+  * `sort_key`：字符串，排序主键（可在`code`,`name`,`type`中选择**一项**）
+  * `sort_order`：字符串，排序方式（默认为`AES`，可在`ASC`,`DESC`中选择**一项**）
 
 * 成功响应：
 
   * `status`：响应结果，正常情况下为`success`
   * `data`：搜索结果，读取方式请参考示例
   * `info`：辅助信息，包括`page_num`、`page_size`、`count`
-    * `page_num`：分页页数
-    * `page_size`：分页大小
-    * `count`：data 长度
+    * `page_size`：分页大小（用户指定的分页大小）
+    * `page_index`：分页页数（从1计数的分页下标）
+    * `page_num`：分页数量（按照当前分页大小计算）
+    * `count`：data 数组长度（请根据type类型区分不同的对象）
 
 * 说明：
 
@@ -58,11 +64,13 @@
   * 外籍学生若使用中文名称可使用拼音搜索，若使用英文名称，请使用完整的姓名进行搜索。
   * Foreign students can use Pinyin search if they use Chinese names. If they use English names, please use the full name to search.
   * 搜索关键词小于两个字符将按照异常请求处理。
+  * 若未设置分类参数则查询所有分类的数据，但不可将分类设置为空。
+  * 当排序主键不存在时，排序方式将不会生效。
 
 * 请求示例：
 
   ```
-  GET /search/fhx?page_size=5&page_num=1
+  GET /search/query?key=fhx&type[]=teacher&type[]=student&page_size=5&page_index=1&sort_key=type&sort_order=DESC
   ```
 
 * 响应示例：
@@ -70,41 +78,43 @@
   ```json
   {
       "status": "success",
-      "student_list": [
+      "data": [
+          {
+              "teacher_code": "0201130230",
+              "name": "返魂香",
+              "type": "teacher",
+              "title": "副教授",
+              "unit": "软件学院",
+              "semester_list": [
+                  "2018-2019-1",
+                  "2016-2017-1",
+                  "2016-2017-2",
+                  "2017-2018-1",
+                  "2017-2018-2",
+                  "2018-2019-2"
+              ]
+          },
           {
               "student_code": "0201130230",
               "name": "范海辛",
               "type": "student",
-              "semesters": [
-                  "2016-2017-1",
-                  "2016-2017-2"
-              ],
               "deputy": "文学院",
-              "class": "城地1602"
-          },
-          {
-              "student_code": "0204130270",
-              "name": "返魂香",
-              "type": "student",
-              "semesters": [
+              "class": "城地1602",
+              "semester_list": [
                   "2016-2017-1",
                   "2016-2017-2"
-              ],
-              "deputy": "资源与安全工程学院",
-              "class": "城地1302"
+              ]
           }
-      ],
-      "teacher_list": [
-      ],
-      "room_list": [
-      ],
+  	],
       "info": {
-          "page_num": 1,
-          "page_size": 5,
-          "count": 2
+          "page_index": 1,
+          "page_size": 3,
+          "page_num": 2,
+          "count": 3
       }
   }
   ```
+
 
 
 ## 信息查询
@@ -115,6 +125,7 @@
 * 方法：`GET`
 * 说明：
   * 学期格式形如：`2018-2019-1`
+  * 响应中不包含该课程的其他学期，semester字段仅表示响应数据所属的学期。
 
 * 请求示例：
 
@@ -130,7 +141,7 @@
       "name": "Web应用开发技术",
       "course_code": "0D8EAEC14F3E4EE38C039C6072218FA7",
       "type": "专业选修课",
-      "weeks": [11,12,13,14,15,16,17,18],
+      "week_list": [11,12,13,14,15,16,17,18],
       "week_string": "11-18/全周",
       "lesson": "10506",
       "union_name": "软件1701-03",
@@ -138,6 +149,7 @@
       "room_code": "2430502",
       "hour": 32,
       "picked": 95,
+      "semester": "2018-2019-1",
       "student_list": [
           {
               "name": "毕水秀",
@@ -150,8 +162,7 @@
               "student_code": "0304170106",
               "class": "软件1701",
               "deputy": "软件学院"
-          },
-          ...
+          }
       ],
       "teacher_list": [
           {
@@ -173,6 +184,7 @@
 - 说明：
 
   - 学期格式形如：`2018-2019-1`
+  - 响应中不包含该课程的其他学期，semester字段仅表示响应数据所属的学期。
 
 - 请求示例：
 
@@ -189,13 +201,14 @@
       "room_code": "2430402",
       "building": "世B",
       "campus": "铁道校区",
+      "semester": "2018-2019-1",
       "course_list": [
           {
               "name": "毛泽东思想与中国特色社会主义理论体系概论",
               "course_code": "F3AA2FE5715C4CDFAAB1DDE56B500097",
               "room": "世B402",
               "room_code": "2430402",
-              "weeks": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+              "week_list": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
               "week_string": "1-18/全周",
               "lesson": "10506",
               "teacher_list": [
@@ -211,7 +224,7 @@
               "course_code": "AABF91ADE89244179D3587BB1CC2DF0E",
               "room": "世B402",
               "room_code": "2430402",
-              "weeks": [13,14,15,16,17,18],
+              "week_list": [13,14,15,16,17,18],
               "week_string": "13-18/全周",
               "lesson": "40506",
               "teacher_list": [
@@ -221,8 +234,7 @@
                       "title": "高级政工师"
                   }
               ]
-          },
-          ...
+          }
       ]
   }
   ```
@@ -285,6 +297,7 @@
       "student_code": "3901160407",
       "deputy": "计算机学院",
       "class": "软件1604",
+      "semester": "2018-2019-1",
       "semester_list": [
           "2018-2019-1",
           "2016-2017-1",
@@ -299,7 +312,7 @@
               "course_code": "10B1D23F9CFA4FC6BD885904C07FA7AB",
               "room": "世B102",
               "room_code": "2430102",
-              "weeks": [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+              "week_list": [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
               "week_string": "3-18/全周",
               "lesson": "10102",
               "teacher_list": [
@@ -315,7 +328,7 @@
               "course_code": "23AA42B2C02544828961859CB0E2F1E2",
               "room": "世B402",
               "room_code": "2430402",
-              "weeks": [11,12,13,14,15,16,17,18],
+              "week_list": [11,12,13,14,15,16,17,18],
               "week_string": "11-18/全周",
               "lesson": "30102",
               "teacher_list": [
@@ -393,6 +406,7 @@
       "name": "邓磊",
       "title": "副教授",
       "unit": "软件学院",
+      "semester": "2018-2019-1",
       "semester_list": [
           "2018-2019-1",
           "2016-2017-1",
@@ -407,7 +421,7 @@
               "course_code": "12E4C3DCB631491DB7F56F13873349C1",
               "room": "世B402",
               "room_code": "2430402",
-              "weeks": [3,4,5,6,7,8,9,10],
+              "week_list": [3,4,5,6,7,8,9,10],
               "week_string": "3-10/全周",
               "lesson": "10102",
               "teacher_list": [
@@ -423,7 +437,7 @@
               "course_code": "42654979C8F540BA9956AFF401E73F5B",
               "room": "世B402",
               "room_code": "2430402",
-              "weeks": [11,12,13,14,15,16,17,18],
+              "week_list": [11,12,13,14,15,16,17,18],
               "week_string": "11-18/全周",
               "lesson": "10102",
               "teacher_list": [
@@ -527,8 +541,23 @@
 
 | 名称   | 含义                     | 类型 |
 | ------ | ------------------------ | ---- |
-|        |                          |      |
+| klass  | ~~非法字段，请反馈~~     |      |
 | course | 两个连续的课时           |      |
 | class  | 学生所属班级（非行政班） |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
+|        |                          |      |
 |        |                          |      |
 

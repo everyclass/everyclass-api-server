@@ -59,7 +59,7 @@ $app->group('/course/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $result['course_code'] = $klass_code;
                 $result['room'] = $course_room;
                 $result['room_code'] = $room_code;
-                $result['week'] = $course_week;
+                $result['week_list'] = $course_week;
                 $result['lesson'] = $course_lesson;
                 $result['klass'] = $course_klass;
                 $result['pick'] = $course_pick;
@@ -67,12 +67,12 @@ $app->group('/course/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $result['type'] = $course_type;
 
                 $student_list[$student_code]['name'] = $student_name;
-                $student_list[$student_code]['code'] = $student_code;
+                $student_list[$student_code]['student_code'] = $student_code;
                 $student_list[$student_code]['class'] = $student_klass;
                 $student_list[$student_code]['deputy'] = $student_deputy;
 
                 $teacher_list[$teacher_code]['name'] = $teacher_name;
-                $teacher_list[$teacher_code]['code'] = $teacher_code;
+                $teacher_list[$teacher_code]['teacher_code'] = $teacher_code;
                 $teacher_list[$teacher_code]['title'] = $teacher_title;
                 $teacher_list[$teacher_code]['unit'] = $teacher_unit;
             }
@@ -81,9 +81,9 @@ $app->group('/course/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             } else {
                 // 最后的处理
                 $result['semester'] = $semester;
-                $result['week_str'] = Tools\week_encode($result['week']);
-                $result['student'] = array_values($student_list);
-                $result['teacher'] = array_values($teacher_list);
+                $result['week_string'] = Tools\week_encode($result['week']);
+                $result['student_list'] = array_values($student_list);
+                $result['teacher_list'] = array_values($teacher_list);
             }
 
             // 将字典数据写入请求响应
