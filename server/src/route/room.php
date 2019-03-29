@@ -54,8 +54,8 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $course_week = json_decode($course_week, true);
 
                 // 完成数据的映射处理
-                $result['code'] = $room_rid;
                 $result['name'] = $room_name;
+                $result['room_code'] = $room_rid;
                 $result['building'] = $room_building;
                 $result['campus'] = $room_campus;
 
@@ -78,7 +78,7 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             } else {
                 // 最后的处理
                 $result['semester'] = $semester;
-                $result['course'] = array_values($course_list);
+                $result['course_list'] = array_values($course_list);
             }
 
 
