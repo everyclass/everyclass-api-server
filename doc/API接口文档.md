@@ -483,7 +483,7 @@
 
 ### 服务信息
 
-- URL：`{host}/info`
+- URL：`{host}/info/service`
 
 - 方法：`GET`
 
@@ -498,7 +498,7 @@
 - 请求示例：
 
   ```
-  GET /info
+  GET /info/service
   ```
 
 - 响应示例：

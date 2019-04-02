@@ -46,7 +46,7 @@ $app->group('/info', function (App $app) {
         return $response->withJson($result);
     });
 
-    $app->get('/healthy', function (Request $request, Response $response) {
+    $app->get('/health', function (Request $request, Response $response) {
         // 初始化健康检查列表
         $check_list = $this->get('Check_list');
 

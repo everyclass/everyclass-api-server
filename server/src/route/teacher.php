@@ -13,9 +13,40 @@ use \Slim\Http\Response;
 use \WolfBolin\Everyclass\Tools as Tools;
 
 $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
-    $app->get('', function (Request $request, Response $response) {
-        $result = ['status' => 'success', 'info' => 'Hello, room!'];
+    $app->get('', function (Request $request, Response $response, $args) {
+        // 获取请求数据
+        $identifier = $args['identifier'];
+
+        // 查询数据库的教师信息
+        $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['occam']);
+        $collection = $db->selectCollection('search');
+        $select_result = $collection->findOne(
+            ['code' => $identifier],
+            [
+                'projection' => [
+                    '_id' => 0,
+                    'key' => 0,
+                    'type' => 0,
+                ]
+            ]
+        );
+        if ($select_result) {
+            // 此人信息存在
+            $result = (array)$select_result->getArrayCopy();
+            $result['semester_list'] = (array)$result['semester'];
+            $result = array_merge($result, (array)$result['data']);
+            unset($result['semester']);
+            unset($result['data']);
+        } else {
+            // 未找到此人信息
+            goto Not_found;
+        }
+
+        // 将字典数据写入请求响应
+        $result = array_merge($result, ['status' => 'success']);
         return $response->withJson($result);
+        Not_found:
+        return \WolfBolin\Slim\HTTP\Not_found($response);
     });
 
     $app->get('/timetable/{semester:20[0-9]{2}-20[0-9]{2}-[1|2]}',
@@ -36,18 +67,26 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 goto Bad_request;
             }
 
-            // 查询数据库的学生信息
+            // 查询数据库的教师信息
             $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['occam']);
             $collection = $db->selectCollection('search');
             $select_result = $collection->findOne(
                 ['code' => $identifier],
-                ['projection' => ['_id' => 0]]
+                [
+                    'projection' => [
+                        '_id' => 0,
+                        'key' => 0,
+                        'type' => 0,
+                    ]
+                ]
             );
             if ($select_result) {
                 // 此人信息存在
                 $result = (array)$select_result->getArrayCopy();
-                $result['available_semester'] = (array)$result['semester'];
+                $result['semester_list'] = (array)$result['semester'];
+                $result = array_merge($result, (array)$result['data']);
                 $result['semester'] = $semester;
+                unset($result['data']);
             } else {
                 // 未找到此人信息
                 goto Not_found;

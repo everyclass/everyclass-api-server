@@ -81,7 +81,7 @@ $app->group('/course/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             } else {
                 // 最后的处理
                 $result['semester'] = $semester;
-                $result['week_string'] = Tools\week_encode($result['week']);
+                $result['week_string'] = Tools\week_encode($result['week_list']);
                 $result['student_list'] = array_values($student_list);
                 $result['teacher_list'] = array_values($teacher_list);
             }
