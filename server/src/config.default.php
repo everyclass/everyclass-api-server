@@ -16,6 +16,7 @@ return [
         'entity' => '',
         'host' => '',
         'port' => '',
+        'ssl' => false,
         'username' => '',
         'password' => '',
         'authSource' => ''
