@@ -4,7 +4,7 @@ MAINTAINER WolfBolin wolfbolin@foxmail.com
 WORKDIR /www
 
 RUN apt-get update \
-	&& apt-get install git -y --no-install-recommends \
+	&& apt-get install git libssl-dev -y --no-install-recommends \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& pecl install mongodb \
 	&& docker-php-ext-enable mongodb \
