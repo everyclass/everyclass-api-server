@@ -120,7 +120,7 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $course_list[$course_code]['course_code'] = $course_code;
                 $course_list[$course_code]['room'] = $course_room;
                 $course_list[$course_code]['room_code'] = $room_code;
-                $course_list[$course_code]['week'] = $course_week;
+                $course_list[$course_code]['week_list'] = $course_week;
                 $course_list[$course_code]['week_string'] = Tools\week_encode($course_list[$course_code]['week']);
                 $course_list[$course_code]['lesson'] = $course_lesson;
 
