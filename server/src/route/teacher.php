@@ -37,8 +37,10 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $result = (array)$select_result->getArrayCopy();
             $result['semester_list'] = (array)$result['semester'];
             $result = array_merge($result, (array)$result['data']);
-            unset($result['semester']);
+            $result['teacher_code'] = $result['code'];
             unset($result['data']);
+            unset($result['code']);
+            unset($result['semester']);
         } else {
             // 未找到此人信息
             goto Not_found;
@@ -90,7 +92,9 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $result['semester_list'] = (array)$result['semester'];
                 $result = array_merge($result, (array)$result['data']);
                 $result['semester'] = $semester;
+                $result['teacher_code'] = $result['code'];
                 unset($result['data']);
+                unset($result['code']);
             } else {
                 // 未找到此人信息
                 goto Not_found;
@@ -121,7 +125,7 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $course_list[$course_code]['lesson'] = $course_lesson;
 
                 $course_list[$course_code]['teacher'] [] = [
-                    'code' => $teacher_code,
+                    'teacher_code' => $teacher_code,
                     'name' => $teacher_name,
                     'title' => $teacher_title
                 ];
