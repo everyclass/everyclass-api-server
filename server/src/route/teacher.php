@@ -25,8 +25,10 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             [
                 'projection' => [
                     '_id' => 0,
-                    'key' => 0,
-                    'type' => 0,
+                    'code' => 1,
+                    'name' => 1,
+                    'data' => 1,
+                    'semester' => 1
                 ]
             ]
         );
@@ -75,8 +77,10 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 [
                     'projection' => [
                         '_id' => 0,
-                        'key' => 0,
-                        'type' => 0,
+                        'code' => 1,
+                        'name' => 1,
+                        'data' => 1,
+                        'semester' => 1
                     ]
                 ]
             );

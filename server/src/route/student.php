@@ -25,8 +25,10 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             [
                 'projection' => [
                     '_id' => 0,
-                    'key' => 0,
-                    'type' => 0,
+                    'code' => 1,
+                    'name' => 1,
+                    'data' => 1,
+                    'semester' => 1
                 ]
             ]
         );
@@ -35,8 +37,10 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $result = (array)$select_result->getArrayCopy();
             $result['semester_list'] = (array)$result['semester'];
             $result = array_merge($result, (array)$result['data']);
+            $result['class'] = $result['klass'];
             unset($result['semester']);
             unset($result['data']);
+            unset($result['klass']);
         } else {
             // 未找到此人信息
             goto Not_found;
@@ -75,8 +79,10 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 [
                     'projection' => [
                         '_id' => 0,
-                        'key' => 0,
-                        'type' => 0,
+                        'code' => 1,
+                        'name' => 1,
+                        'data' => 1,
+                        'semester' => 1
                     ]
                 ]
             );
@@ -85,8 +91,10 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $result = (array)$select_result->getArrayCopy();
                 $result['semester_list'] = (array)$result['semester'];
                 $result = array_merge($result, (array)$result['data']);
+                $result['class'] = $result['klass'];
                 $result['semester'] = $semester;
                 unset($result['data']);
+                unset($result['klass']);
             } else {
                 // 未找到此人信息
                 goto Not_found;
