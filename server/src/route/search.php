@@ -77,16 +77,17 @@ $app->group('/search', function (App $app) {
         $search_count = (array)$search_count->toArray();
         $result = [];
         foreach ($search_result as $item) {
-            $obj = [
-                $item['type'] . '_code' => $item['code'],
-                'name' => $item['name'],
-                'type' => $item['type'],
-                'semester_list' => (array)$item['semester']
-            ];
-            foreach ($item['data'] as $key => $value) {
-                $obj[$key] = $value;
+            $item[$item['type'] . '_code'] = $item['code'];
+            $item['semester_list'] = (array)$item['semester'];
+            $item = array_merge((array)$item, (array)$item['data']);
+            if($item['type'] == 'student'){
+                $item['class'] = $item['klass'];
+                unset($item['klass']);
             }
-            $result [] = $obj;
+            unset($item['data']);
+            unset($item['code']);
+            unset($item['semester']);
+            $result [] = $item;
         }
         if (count($result) < 1) {
             goto Not_found;

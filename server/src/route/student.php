@@ -137,7 +137,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             if (count($course_list) < 1) {
                 goto Not_found;
             } else {
-                $result['course'] = array_values($course_list);
+                $result['course_list'] = array_values($course_list);
             }
 
 
