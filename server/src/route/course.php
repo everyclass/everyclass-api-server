@@ -61,8 +61,8 @@ $app->group('/course/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $result['room_code'] = $room_code;
                 $result['week_list'] = $course_week;
                 $result['lesson'] = $course_lesson;
-                $result['klass'] = $course_klass;
-                $result['pick'] = $course_pick;
+                $result['union_name'] = $course_klass;
+                $result['picked'] = $course_pick;
                 $result['hour'] = $course_hour;
                 $result['type'] = $course_type;
 
