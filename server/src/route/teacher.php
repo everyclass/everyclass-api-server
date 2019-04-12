@@ -108,7 +108,7 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             mysqli_stmt_bind_param($stmt, "s", $identifier);
             mysqli_stmt_execute($stmt);
             $stmt->bind_result($course_name, $course_code, $course_room, $room_code,
-                $course_week, $course_lesson, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
+                $course_week, $course_lesson, $teacher_code, $teacher_name, $teacher_title, $teacher_unit);
 
             $course_list = [];
             while ($stmt->fetch()) {
