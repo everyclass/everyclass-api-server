@@ -78,6 +78,7 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             } else {
                 // 最后的处理
                 $result['semester'] = $semester;
+                $result['semester_list'] = $semester_list;
                 $result['course_list'] = array_values($course_list);
             }
 
