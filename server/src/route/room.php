@@ -66,7 +66,7 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $course_list[$course_code]['week_string'] = Tools\week_encode($course_list[$course_code]['week_list']);
                 $course_list[$course_code]['lesson'] = $course_lesson;
 
-                $course_list[$course_code]['teacher'] [] = [
+                $course_list[$course_code]['teacher_list'] [] = [
                     'code' => $teacher_code,
                     'name' => $teacher_name,
                     'title' => $teacher_title
