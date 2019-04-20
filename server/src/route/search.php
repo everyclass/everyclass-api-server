@@ -46,7 +46,7 @@ $app->group('/search', function (App $app) {
         }
 
         // 在搜索库中完成关键词搜索
-        $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['occam']);
+        $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
         $collection = $db->selectCollection('search');
         $search_result = $collection->find(
             [

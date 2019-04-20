@@ -38,10 +38,9 @@ $app->group('/course/{identifier:[0-9a-zA-Z]+}', function (App $app) {
 
             // 在数据库中查询数据
             $mysqli = $this->get('mysql_client');
-            mysqli_select_db($mysqli, $this->get('MySQL')['occam']);
-            $sql = str_replace('template', $semester, $this->get('SQL')['course']);
-            $stmt = mysqli_prepare($mysqli, $sql);
-            mysqli_stmt_bind_param($stmt, "s", $identifier);
+            mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
+            $stmt = mysqli_prepare($mysqli, $this->get('SQL')['course']);
+            mysqli_stmt_bind_param($stmt, "ss", $semester, $identifier);
             mysqli_stmt_execute($stmt);
             $stmt->bind_result($course_name, $klass_code, $course_room, $room_code, $course_week,
                 $course_lesson, $course_klass, $course_pick, $course_hour, $course_type, $student_name, $student_code,

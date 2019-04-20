@@ -26,11 +26,11 @@ return [
             `teacher`.`code`,
             `teacher`.`name`,
             `teacher`.`title`
-            FROM `room_all` as room
-            LEFT JOIN `card_template` as card ON room.code = card.roomID 
-            LEFT JOIN `teacher_link_template` as t_link USING(cid)
-            LEFT JOIN `teacher_template` as teacher USING(tid) 
-            WHERE room.code = ?',
+            FROM `room` as room
+            LEFT JOIN `card` as card ON room.code = card.roomID 
+            LEFT JOIN `teacher_link` as t_link USING(cid)
+            LEFT JOIN `teacher` as teacher USING(tid) 
+            WHERE card.`semester` = ? AND room.code = ?',
         'course' => '
             SELECT 
             `card`.`name`,
@@ -51,12 +51,12 @@ return [
             `teacher`.`code`,
             `teacher`.`title`,
             `teacher`.`unit`
-            FROM `card_template` AS card
-            LEFT JOIN `student_link_template` AS s_link USING(cid)
-            LEFT JOIN `teacher_link_template` AS t_link USING(cid) 
-            LEFT JOIN `student_template` AS student USING(sid)
-            LEFT JOIN `teacher_template` as teacher USING(tid)
-            WHERE `klassID` = ?',
+            FROM `card` AS card
+            LEFT JOIN `student_link` AS s_link USING(cid)
+            LEFT JOIN `teacher_link` AS t_link USING(cid) 
+            LEFT JOIN `student` AS student USING(sid)
+            LEFT JOIN `teacher` as teacher USING(tid)
+            WHERE card.`semester` = ? AND card.`klassID` = ?',
         'student' => '
             SELECT 
             `card`.`name`,
@@ -69,12 +69,12 @@ return [
             `teacher`.`code`,
             `teacher`.`title`,
             `teacher`.`unit`
-            FROM `student_template` as student
-            JOIN `student_link_template` as s_link USING(sid) 
-            JOIN `card_template` as card USING(cid)
-            JOIN `teacher_link_template` as t_link USING(cid)
-            JOIN `teacher_template` as teacher USING(tid)
-            WHERE student.`code` = ?',
+            FROM `student` as student
+            JOIN `student_link` as s_link USING(sid) 
+            JOIN `card` as card USING(cid)
+            JOIN `teacher_link` as t_link USING(cid)
+            JOIN `teacher` as teacher USING(tid)
+            WHERE student.`semester` = ? AND student.`code` = ?',
         'teacher' => '
             SELECT 
             `card`.`name`,
@@ -87,11 +87,11 @@ return [
             `c_teacher`.`name`, 
             `c_teacher`.`title`,
             `c_teacher`.`unit`
-            FROM `teacher_template` as teacher
-            JOIN `teacher_link_template` as teacher2card ON teacher.tid = teacher2card.tid
-            JOIN `card_template` as card ON teacher2card.cid = card.cid
-            JOIN `teacher_link_template` as card2teacher ON card.cid = card2teacher.cid
-            JOIN `teacher_template` as c_teacher ON card2teacher.tid = c_teacher.tid 
-            WHERE teacher.`code` = ?'
+            FROM `teacher` as teacher
+            JOIN `teacher_link` as teacher2card ON teacher.tid = teacher2card.tid
+            JOIN `card` as card ON teacher2card.cid = card.cid
+            JOIN `teacher_link` as card2teacher ON card.cid = card2teacher.cid
+            JOIN `teacher` as c_teacher ON card2teacher.tid = c_teacher.tid 
+            WHERE teacher.`semester` = ? AND teacher.`code` = ?'
     ]
 ];
