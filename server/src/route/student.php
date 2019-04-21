@@ -7,13 +7,12 @@
  */
 
 use \Slim\App;
-use \Slim\Http\Request;
 use \Slim\Http\Response;
 
 use \WolfBolin\Everyclass\Tools as Tools;
 
 $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
-    $app->get('', function (Request $request, Response $response, $args) {
+    $app->get('', function (Response $response, $args) {
         // 获取请求数据
         $identifier = $args['identifier'];
 
@@ -59,7 +58,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
     });
 
     $app->get('/timetable/{semester:20[0-9]{2}-20[0-9]{2}-[1|2]}',
-        function (Request $request, Response $response, $args) {
+        function (Response $response, $args) {
             // 获取请求数据
             $semester = $args['semester'];
             $identifier = $args['identifier'];

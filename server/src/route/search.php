@@ -10,10 +10,8 @@ use \Slim\App;
 use \Slim\Http\Request;
 use \Slim\Http\Response;
 
-use \WolfBolin\Everyclass\Tools as Tools;
-
 $app->group('/search', function (App $app) {
-    $app->get('', function (Request $request, Response $response) {
+    $app->get('', function (Response $response) {
         $result = ['status' => 'success', 'info' => 'Hello, search engine!'];
         return $response->withJson($result);
     });

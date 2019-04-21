@@ -7,19 +7,18 @@
  */
 
 use \Slim\App;
-use \Slim\Http\Request;
 use \Slim\Http\Response;
 
 use \WolfBolin\Everyclass\Tools as Tools;
 
 $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
-    $app->get('', function (Request $request, Response $response) {
+    $app->get('', function (Response $response) {
         $result = ['status' => 'success', 'info' => 'Hello, room!'];
         return $response->withJson($result);
     });
 
     $app->get('/timetable/{semester:20[0-9]{2}-20[0-9]{2}-[1|2]}',
-        function (Request $request, Response $response, $args) {
+        function (Response $response, $args) {
             // 获取请求数据
             $semester = $args['semester'];
             $identifier = $args['identifier'];
