@@ -55,8 +55,11 @@ $app->group('/search', function (App $app) {
             ],
             [
                 'projection' => [
-                    '_id' => 0,
-                    'key' => 0
+                    'code' => 1,
+                    'name' => 1,
+                    'data' => 1,
+                    'semester' => 1,
+                    'type' => 1,
                 ],
                 'limit' => $page_size,
                 'skip' => ($page_index - 1) * $page_size,
