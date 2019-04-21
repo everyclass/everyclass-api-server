@@ -12,7 +12,6 @@ return [
     'Mongo_Token' => '',
     'MySQL_Token' => '',
     'MongoDB' => [
-        'occam' => '',
         'entity' => '',
         'host' => '',
         'port' => '',
@@ -22,7 +21,6 @@ return [
         'authSource' => ''
     ],
     'MySQL' => [
-        'occam' => '',
         'entity' => '',
         'host' => '',
         'port' => '',
