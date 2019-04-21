@@ -75,7 +75,10 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
             $collection = $db->selectCollection('search');
             $select_result = $collection->findOne(
-                ['code' => $identifier],
+                [
+                    'code' => $identifier,
+                    'pattern' => 'code'
+                ],
                 [
                     'projection' => [
                         '_id' => 0,
