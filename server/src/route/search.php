@@ -11,14 +11,14 @@ use \Slim\Http\Request;
 use \Slim\Http\Response;
 
 $app->group('/search', function (App $app) {
-    $app->get('', function (Response $response) {
+    $app->get('', function (Request $request,Response $response) {
         $result = ['status' => 'success', 'info' => 'Hello, search engine!'];
         return $response->withJson($result);
     });
 
     $app->get('/query', function (Request $request, Response $response) {
         $search_key = $request->getQueryParam("key", "");
-        $search_type = $request->getQueryParam("type", array("student", "teacher"));
+        $search_type = $request->getQueryParam("type", array("student", "teacher", "room"));
         $page_size = intval($request->getQueryParam("page_size", 20));
         $page_index = intval($request->getQueryParam("page_index", 1));
         $sort_key = $request->getQueryParam("sort_key", null);
@@ -53,6 +53,7 @@ $app->group('/search', function (App $app) {
             ],
             [
                 'projection' => [
+                    '_id' => 0,
                     'code' => 1,
                     'name' => 1,
                     'data' => 1,
