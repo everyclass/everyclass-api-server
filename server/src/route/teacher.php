@@ -76,6 +76,7 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $select_result = $collection->findOne(
                 [
                     'code' => $identifier,
+                    'type' => 'teacher',
                     'pattern' => 'code'
                 ],
                 [
