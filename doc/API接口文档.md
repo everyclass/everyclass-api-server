@@ -41,7 +41,7 @@
 * 参数（Query string）：
 
   * `key`：字符串，搜索值
-  * `type`：字符串数组、搜索分类（可在`student`,`teacher`中选择一项或多项）
+  * `type`：字符串数组、搜索分类（可在`student`,`teacher`,`room`,`vague_room`中选择一项或多项）
   * `page_size`：数字，分页大小（默认值20，最小值2，最大值100）
   * `page_index`：数字，分页页数（默认值为1，从1计数的分页下标）
   * `sort_key`：字符串，排序主键（可在`code`,`name`,`type`中选择**一项**）
@@ -64,7 +64,7 @@
   * 外籍学生若使用中文名称可使用拼音搜索，若使用英文名称，请使用完整的姓名进行搜索。
   * Foreign students can use Pinyin search if they use Chinese names. If they use English names, please use the full name to search.
   * 搜索关键词小于两个字符将按照异常请求处理。
-  * 若未设置分类参数则查询所有分类的数据，但不可将分类设置为空。
+  * 若未设置分类参数则查询所有分类的数据，**但不可将分类设置为空**。
   * 当排序主键不存在时，排序方式将不会生效。
 
 * 请求示例：
@@ -356,8 +356,9 @@
 - 方法：`GET`
 
 - 说明：
-  - 学期格式形如：`2018-2019-1`
-
+  
+- 学期格式形如：`2018-2019-1`
+  
 - 请求示例：
 
     ```

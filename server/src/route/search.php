@@ -18,7 +18,7 @@ $app->group('/search', function (App $app) {
 
     $app->get('/query', function (Request $request, Response $response) {
         $search_key = $request->getQueryParam("key", "");
-        $search_type = $request->getQueryParam("type", array("student", "teacher", "room"));
+        $search_type = $request->getQueryParam("type", array("student", "teacher", "room", "vague_room"));
         $page_size = intval($request->getQueryParam("page_size", 20));
         $page_index = intval($request->getQueryParam("page_index", 1));
         $sort_key = $request->getQueryParam("sort_key", null);
@@ -28,6 +28,8 @@ $app->group('/search', function (App $app) {
         }
         if (empty($search_key) || !is_string($search_key) || strlen($search_key) < 2) {
             goto Bad_request;
+        }else{
+            $search_key = strtoupper($search_key); // 搜索词转大写
         }
         if (empty($search_type) || !is_array($search_type) || count($search_type) < 1) {
             goto Bad_request;
