@@ -41,7 +41,6 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $result = (array)$select_result->getArrayCopy();
             $result['semester_list'] = (array)$result['semester'];
             $result = array_merge($result, (array)$result['data']);
-            $result['class'] = $result['klass'];
             $result['student_code'] = $result['code'];
             unset($result['data']);
             unset($result['code']);

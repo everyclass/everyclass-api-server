@@ -125,8 +125,8 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $card_list[$card_code]['card_code'] = $card_code;
                 $card_list[$card_code]['room_code'] = $room_code;
                 $card_list[$card_code]['week_list'] = $card_week;
-                $card_list[$card_code]['week_string'] = Tools\week_encode($card_list[$card_code]['week_list']);
                 $card_list[$card_code]['course_code'] = $course_code;
+                $card_list[$card_code]['week_string'] = Tools\week_encode($card_list[$card_code]['week_list']);
 
                 $card_list[$card_code]['teacher_list'] [] = [
                     'teacher_code' => $teacher_code,

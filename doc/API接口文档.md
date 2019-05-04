@@ -28,10 +28,11 @@
 
 初始版本，未发布前版本
 
-#### v0.1.12
+#### v0.2.0
 
 * 因课程相关用词体系修改，原有`course_list`修改为`card_list`。
 * `course_list`中原有的`course_code`修改为`card_code`。
+* `course_list`中原有的`class`修改为`tea_class`表示一个行政班。
 * 每个card中添加`course_code`字段，表示课程号（如：140102X1）。
 
 ## 模糊搜索
@@ -317,12 +318,13 @@
       "card_list": [
           {
               "name": "日语（二外）",
-              "card_code": "10B1D23F9CFA4FC6BD885904C07FA7AB",
               "room": "世B102",
+              "lesson": "10102",
+              "card_code": "10B1D23F9CFA4FC6BD885904C07FA7AB",
               "room_code": "2430102",
               "week_list": [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+              "course_code": "390121Z10",
               "week_string": "3-18/全周",
-              "lesson": "10102",
               "teacher_list": [
                   {
                       "teacher_code": "702134",
@@ -333,12 +335,13 @@
           },
           {
               "name": "云计算及应用",
-              "code": "23AA42B2C02544828961859CB0E2F1E2",
               "room": "世B402",
+              "lesson": "30102",
+              "card_code": "23AA42B2C02544828961859CB0E2F1E2",
               "room_code": "2430402",
               "week_list": [11,12,13,14,15,16,17,18],
+              "course_code": "390121Z10",
               "week_string": "11-18/全周",
-              "lesson": "30102",
               "teacher_list": [
                   {
                       "teacher_code": "212178",
@@ -429,12 +432,13 @@
       "card_list": [
           {
               "name": "大型数据库技术",
-              "card_code": "12E4C3DCB631491DB7F56F13873349C1",
               "room": "世B402",
+              "lesson": "10102",
+              "card_code": "12E4C3DCB631491DB7F56F13873349C1",
               "room_code": "2430402",
               "week_list": [3,4,5,6,7,8,9,10],
+              "course_code": "390121Z10",
               "week_string": "3-10/全周",
-              "lesson": "10102",
               "teacher_list": [
                   {
                       "teacher_code": "邓磊",
@@ -445,12 +449,13 @@
           },
           {
               "name": "云计算及应用",
-              "code": "42654979C8F540BA9956AFF401E73F5B",
               "room": "世B402",
+              "lesson": "10102",
+              "card_code": "42654979C8F540BA9956AFF401E73F5B",
               "room_code": "2430402",
               "week_list": [11,12,13,14,15,16,17,18],
+              "course_code": "390121Z10",
               "week_string": "11-18/全周",
-              "lesson": "10102",
               "teacher_list": [
                   {
                       "teacher_code": "邓磊",
