@@ -214,7 +214,7 @@
       "building": "世B",
       "room_code": "2430402",
       "semester": "2018-2019-1",
-      "course_list": [
+      "card_list": [
           {
               "name": "毛泽东思想与中国特色社会主义理论体系概论",
               "room": "世B402",
