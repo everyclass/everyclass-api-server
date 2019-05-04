@@ -13,53 +13,41 @@ use \Slim\Http\Response;
 use \WolfBolin\Everyclass\Tools as Tools;
 
 $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
-    $app->get('', function (Request $request,Response $response, $args) {
+    $app->get('', function (Request $request, Response $response, $args) {
         // 获取请求数据
         $identifier = $args['identifier'];
 
         // 查询数据库的学生信息
-        $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
-        $collection = $db->selectCollection('search');
-        $select_result = $collection->findOne(
-            [
-                'code' => $identifier,
-                'type' => 'student',
-                'pattern' => 'code'
-            ],
-            [
-                'projection' => [
-                    '_id' => 0,
-                    'code' => 1,
-                    'name' => 1,
-                    'data' => 1,
-                    'semester' => 1
-                ]
-            ]
-        );
-        if ($select_result) {
-            // 此人信息存在
-            $result = (array)$select_result->getArrayCopy();
-            $result['semester_list'] = (array)$result['semester'];
-            $result = array_merge($result, (array)$result['data']);
-            $result['student_code'] = $result['code'];
-            unset($result['data']);
-            unset($result['code']);
-            unset($result['klass']);
-            unset($result['semester']);
+        $result = [];
+        $mysqli = $this->get('mysql_client');
+        mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
+        if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['student_base'], $identifier))) {
+            if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
+                goto Not_found;
+            }
+            while ($row = mysqli_fetch_row($sql_result)) {
+                $result['name'] = $row[0];
+                $result['code'] = $row[1];
+                $result['class'] = $row[2];
+                $result['deputy'] = $row[3];
+                $result['campus'] = $row[4];
+                $result['semester_list'] [] = $row[5];
+            }
         } else {
-            // 未找到此人信息
-            goto Not_found;
+            goto Bad_request;
         }
 
         // 将字典数据写入请求响应
-        $result = array_merge($result, ['status' => 'success']);
+        $result = array_merge(['status' => 'success'], $result);
         return $response->withJson($result);
+        Bad_request:
+        return \WolfBolin\Slim\HTTP\Bad_request($response);
         Not_found:
         return \WolfBolin\Slim\HTTP\Not_found($response);
     });
 
     $app->get('/timetable/{semester:20[0-9]{2}-20[0-9]{2}-[1|2]}',
-        function (Request $request,Response $response, $args) {
+        function (Request $request, Response $response, $args) {
             // 获取请求数据
             $semester = $args['semester'];
             $identifier = $args['identifier'];
@@ -76,9 +64,8 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 goto Bad_request;
             }
 
-            // 查询数据库的学生信息
-
-
+            // 查询数据库的学生可用学期
+            $result = [];
             $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
             $collection = $db->selectCollection('search');
             $select_result = $collection->findOne(
@@ -86,23 +73,14 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 [
                     'projection' => [
                         '_id' => 0,
-                        'code' => 1,
-                        'name' => 1,
-                        'data' => 1,
                         'semester' => 1
                     ]
                 ]
             );
             if ($select_result) {
                 // 此人信息存在
-                $result = (array)$select_result->getArrayCopy();
-                $result['semester_list'] = (array)$result['semester'];
-                $result = array_merge($result, (array)$result['data']);
-                $result['student_code'] = $result['code'];
-                $result['semester'] = $semester;
-                unset($result['data']);
-                unset($result['code']);
-                unset($result['klass']);
+                $semester_list = (array)$select_result->getArrayCopy();
+                $semester_list = (array)$semester_list['semester'];
             } else {
                 // 未找到此人信息
                 goto Not_found;
@@ -111,6 +89,23 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             // 在数据库中查询数据
             $mysqli = $this->get('mysql_client');
             mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
+            // 查询学生信息
+            $sql = sprintf($this->get('SQL')['student_info'], $semester, $identifier);
+            if ($sql_result = mysqli_query($mysqli, $sql)) {
+                if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
+                    goto Not_found;
+                }
+                $row = mysqli_fetch_row($sql_result);
+                $result['name'] = $row[0];
+                $result['code'] = $row[1];
+                $result['class'] = $row[2];
+                $result['deputy'] = $row[3];
+                $result['campus'] = $row[4];
+                $result['semester_list'] = $semester_list;
+            } else {
+                goto Bad_request;
+            }
+            // 查询学生课程
             $stmt = mysqli_prepare($mysqli, $this->get('SQL')['student']);
             mysqli_stmt_bind_param($stmt, "ss", $semester, $identifier);
             mysqli_stmt_execute($stmt);
@@ -146,7 +141,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
 
 
             // 将字典数据写入请求响应
-            $result = array_merge($result, ['status' => 'success']);
+            $result = array_merge(['status' => 'success'], $result);
             return $response->withJson($result);
             // 异常访问出口
             Bad_request:

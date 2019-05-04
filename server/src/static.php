@@ -59,7 +59,12 @@ return [
             LEFT JOIN `student` AS student USING(sid)
             LEFT JOIN `teacher` as teacher USING(tid)
             WHERE card.`semester` = ? AND card.`code` = ?',
-//        'student_base' => "SELECT `name`, `code`, `class`, `deputy`, `campus`, `semester` WHERE `code` = '%s'",
+        'student_base' => "
+            SELECT `name`, `code`, `class`, `deputy`, `campus`, `semester` 
+            FROM `student` WHERE `code` = '%s'",
+        'student_info' => "
+            SELECT `name`, `code`, `class`, `deputy`, `campus`
+            FROM `student` WHERE `semester` = '%s' AND `code` = '%s'",
         'student' => '
             SELECT 
             `card`.`name`,
@@ -79,6 +84,9 @@ return [
             JOIN `teacher_link` as t_link USING(cid)
             JOIN `teacher` as teacher USING(tid)
             WHERE student.`semester` = ? AND student.`code` = ?',
+        'teacher_base' => "
+            SELECT `name`, `code`, `unit`, `title`, `degree`, `semester` 
+            FROM `teacher` WHERE `code` = '%s'",
         'teacher' => '
             SELECT 
             `card`.`name`,

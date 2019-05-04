@@ -84,7 +84,7 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
 
 
             // 将字典数据写入请求响应
-            $result = array_merge($result, ['status' => 'success']);
+            $result = array_merge(['status' => 'success'], $result);
             return $response->withJson($result);
             // 异常访问出口
             Bad_request:

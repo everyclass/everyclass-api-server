@@ -18,37 +18,30 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
         $identifier = $args['identifier'];
 
         // 查询数据库的教师信息
-        $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
-        $collection = $db->selectCollection('search');
-        $select_result = $collection->findOne(
-            ['code' => $identifier],
-            [
-                'projection' => [
-                    '_id' => 0,
-                    'code' => 1,
-                    'name' => 1,
-                    'data' => 1,
-                    'semester' => 1
-                ]
-            ]
-        );
-        if ($select_result) {
-            // 此人信息存在
-            $result = (array)$select_result->getArrayCopy();
-            $result['semester_list'] = (array)$result['semester'];
-            $result = array_merge($result, (array)$result['data']);
-            $result['teacher_code'] = $result['code'];
-            unset($result['data']);
-            unset($result['code']);
-            unset($result['semester']);
+        $result = [];
+        $mysqli = $this->get('mysql_client');
+        mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
+        if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['teacher_base'], $identifier))) {
+            if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
+                goto Not_found;
+            }
+            while ($row = mysqli_fetch_row($sql_result)) {
+                $result['name'] = $row[0];
+                $result['code'] = $row[1];
+                $result['unit'] = $row[2];
+                $result['title'] = $row[3];
+                $result['degree'] = $row[4];
+                $result['semester_list'] [] = $row[5];
+            }
         } else {
-            // 未找到此人信息
-            goto Not_found;
+            goto Bad_request;
         }
 
         // 将字典数据写入请求响应
-        $result = array_merge($result, ['status' => 'success']);
+        $result = array_merge(['status' => 'success'], $result);
         return $response->withJson($result);
+        Bad_request:
+        return \WolfBolin\Slim\HTTP\Bad_request($response);
         Not_found:
         return \WolfBolin\Slim\HTTP\Not_found($response);
     });
@@ -71,42 +64,27 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 goto Bad_request;
             }
 
-            // 查询数据库的教师信息
-            $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
-            $collection = $db->selectCollection('search');
-            $select_result = $collection->findOne(
-                [
-                    'code' => $identifier,
-                    'type' => 'teacher',
-                    'pattern' => 'code'
-                ],
-                [
-                    'projection' => [
-                        '_id' => 0,
-                        'code' => 1,
-                        'name' => 1,
-                        'data' => 1,
-                        'semester' => 1
-                    ]
-                ]
-            );
-            if ($select_result) {
-                // 此人信息存在
-                $result = (array)$select_result->getArrayCopy();
-                $result['semester_list'] = (array)$result['semester'];
-                $result = array_merge($result, (array)$result['data']);
-                $result['semester'] = $semester;
-                $result['teacher_code'] = $result['code'];
-                unset($result['data']);
-                unset($result['code']);
-            } else {
-                // 未找到此人信息
-                goto Not_found;
-            }
-
             // 在数据库中查询数据
+            $result = [];
             $mysqli = $this->get('mysql_client');
             mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
+            // 查询教师信息
+            if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['teacher_base'], $identifier))) {
+                if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
+                    goto Not_found;
+                }
+                while ($row = mysqli_fetch_row($sql_result)) {
+                    $result['name'] = $row[0];
+                    $result['code'] = $row[1];
+                    $result['unit'] = $row[2];
+                    $result['title'] = $row[3];
+                    $result['degree'] = $row[4];
+                    $result['semester_list'] [] = $row[5];
+                }
+            } else {
+                goto Bad_request;
+            }
+            // 查询教师课程
             $stmt = mysqli_prepare($mysqli, $this->get('SQL')['teacher']);
             mysqli_stmt_bind_param($stmt, "ss", $semester, $identifier);
             mysqli_stmt_execute($stmt);
@@ -142,7 +120,7 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
 
 
             // 将字典数据写入请求响应
-            $result = array_merge($result, ['status' => 'success']);
+            $result = array_merge(['status' => 'success'], $result);
             return $response->withJson($result);
             // 异常访问出口
             Bad_request:
