@@ -101,7 +101,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $result['class'] = $row[2];
                 $result['deputy'] = $row[3];
                 $result['campus'] = $row[4];
-                $result['$semester'] = $semester;
+                $result['semester'] = $semester;
                 $result['semester_list'] = $semester_list;
             } else {
                 goto Bad_request;
