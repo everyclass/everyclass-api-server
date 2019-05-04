@@ -78,6 +78,8 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             }
 
             // 查询数据库的学生信息
+
+
             $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
             $collection = $db->selectCollection('search');
             $select_result = $collection->findOne(
@@ -97,7 +99,6 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $result = (array)$select_result->getArrayCopy();
                 $result['semester_list'] = (array)$result['semester'];
                 $result = array_merge($result, (array)$result['data']);
-                $result['class'] = $result['klass'];
                 $result['student_code'] = $result['code'];
                 $result['semester'] = $semester;
                 unset($result['data']);
@@ -114,33 +115,34 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $stmt = mysqli_prepare($mysqli, $this->get('SQL')['student']);
             mysqli_stmt_bind_param($stmt, "ss", $semester, $identifier);
             mysqli_stmt_execute($stmt);
-            $stmt->bind_result($course_name, $course_code, $course_room, $room_code,
-                $course_week, $course_lesson, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
+            $stmt->bind_result($card_name, $card_code, $card_room, $card_week, $card_lesson,
+                $room_code, $course_code, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
 
-            $course_list = [];
+            $card_list = [];
             while ($stmt->fetch()) {
                 // 对每个数据进行数据转换
-                $course_week = json_decode($course_week, true);
+                $card_week = json_decode($card_week, true);
 
                 // 完成数据的映射处理
-                $course_list[$course_code]['name'] = $course_name;
-                $course_list[$course_code]['course_code'] = $course_code;
-                $course_list[$course_code]['room'] = $course_room;
-                $course_list[$course_code]['room_code'] = $room_code;
-                $course_list[$course_code]['week_list'] = $course_week;
-                $course_list[$course_code]['week_string'] = Tools\week_encode($course_list[$course_code]['week_list']);
-                $course_list[$course_code]['lesson'] = $course_lesson;
+                $card_list[$card_code]['name'] = $card_name;
+                $card_list[$card_code]['room'] = $card_room;
+                $card_list[$card_code]['lesson'] = $card_lesson;
+                $card_list[$card_code]['card_code'] = $card_code;
+                $card_list[$card_code]['room_code'] = $room_code;
+                $card_list[$card_code]['week_list'] = $card_week;
+                $card_list[$card_code]['course_code'] = $course_code;
+                $card_list[$card_code]['week_string'] = Tools\week_encode($card_list[$card_code]['week_list']);
 
-                $course_list[$course_code]['teacher_list'] [] = [
+                $card_list[$card_code]['teacher_list'] [] = [
                     'teacher_code' => $teacher_code,
                     'name' => $teacher_name,
                     'title' => $teacher_title
                 ];
             }
-            if (count($course_list) < 1) {
+            if (count($card_list) < 1) {
                 goto Not_found;
             } else {
-                $result['course_list'] = array_values($course_list);
+                $result['card_list'] = array_values($card_list);
             }
 
 

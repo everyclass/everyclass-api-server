@@ -12,9 +12,9 @@ use \Slim\Http\Response;
 
 use \WolfBolin\Everyclass\Tools as Tools;
 
-$app->group('/course/{identifier:[0-9a-zA-Z]+}', function (App $app) {
+$app->group('/card/{identifier:[0-9a-zA-Z]+}', function (App $app) {
     $app->get('', function (Request $request,Response $response) {
-        $result = ['status' => 'success', 'info' => 'Hello, course!'];
+        $result = ['status' => 'success', 'info' => 'Hello, card!'];
         return $response->withJson($result);
     });
 
@@ -39,31 +39,34 @@ $app->group('/course/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             // 在数据库中查询数据
             $mysqli = $this->get('mysql_client');
             mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
-            $stmt = mysqli_prepare($mysqli, $this->get('SQL')['course']);
+            $stmt = mysqli_prepare($mysqli, $this->get('SQL')['card']);
             mysqli_stmt_bind_param($stmt, "ss", $semester, $identifier);
             mysqli_stmt_execute($stmt);
-            $stmt->bind_result($course_name, $klass_code, $course_room, $room_code, $course_week,
-                $course_lesson, $course_klass, $course_pick, $course_hour, $course_type, $student_name, $student_code,
-                $student_klass, $student_deputy, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
+            $stmt->bind_result($card_name, $card_code, $card_room, $card_pick, $card_hour,
+                $card_type, $card_week, $card_lesson, $tea_class, $room_code, $course_code,
+                $student_name, $student_code, $student_klass, $student_deputy,
+                $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
 
             $result = [];
             $student_list = [];
             $teacher_list = [];
             while ($stmt->fetch()) {
                 // 对每个数据进行数据转换
-                $course_week = json_decode($course_week, true);
+                $card_week = json_decode($card_week, true);
 
                 // 完成数据的映射处理
-                $result['name'] = $course_name;
-                $result['course_code'] = $klass_code;
-                $result['room'] = $course_room;
+                $result['name'] = $card_name;
+                $result['room'] = $card_room;
+                $result['hour'] = $card_hour;
+                $result['type'] = $card_type;
+                $result['picked'] = $card_pick;
+                $result['lesson'] = $card_lesson;
+                $result['tea_class'] = $tea_class;
+                $result['card_code'] = $card_code;
                 $result['room_code'] = $room_code;
-                $result['week_list'] = $course_week;
-                $result['lesson'] = $course_lesson;
-                $result['union_name'] = $course_klass;
-                $result['picked'] = $course_pick;
-                $result['hour'] = $course_hour;
-                $result['type'] = $course_type;
+                $result['week_list'] = $card_week;
+                $result['course_code'] = $course_code;
+                $result['week_string'] = Tools\week_encode($result['week_list']);
 
                 $student_list[$student_code]['name'] = $student_name;
                 $student_list[$student_code]['student_code'] = $student_code;
@@ -80,7 +83,6 @@ $app->group('/course/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             } else {
                 // 最后的处理
                 $result['semester'] = $semester;
-                $result['week_string'] = Tools\week_encode($result['week_list']);
                 $result['student_list'] = array_values($student_list);
                 $result['teacher_list'] = array_values($teacher_list);
             }

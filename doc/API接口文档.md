@@ -28,7 +28,11 @@
 
 初始版本，未发布前版本
 
+#### v0.2.0
 
+* 因课程相关用词体系修改，原有`course_list`修改为`card_list`。
+* `course_list`中原有的`course_code`修改为`card_code`。
+* 每个card中添加`course_code`字段，表示课程号（如：140102X1）。
 
 ## 模糊搜索
 
@@ -40,7 +44,7 @@
 
 * 参数（Query string）：
 
-  * `key`：字符串，搜索值
+  * `key`：字符串，搜索值（搜索字符串最短不可小于2个字符）
   * `type`：字符串数组、搜索分类（可在`student`,`teacher`,`room`,`vague_room`中选择一项或多项）
   * `page_size`：数字，分页大小（默认值20，最小值2，最大值100）
   * `page_index`：数字，分页页数（默认值为1，从1计数的分页下标）
@@ -119,9 +123,9 @@
 
 ## 信息查询
 
-### 课程查询
+### 卡片查询
 
-* URL：`/course/{课程编号}/timetable/{学期}`
+* URL：`/card/{课程编号}/timetable/{学期}`
 * 方法：`GET`
 * 说明：
   * 学期格式形如：`2018-2019-1`
@@ -130,7 +134,7 @@
 * 请求示例：
 
   ```
-  GET /course/0D8EAEC14F3E4EE38C039C6072218FA7/timetable/2018-2019-1
+  GET /card/0D8EAEC14F3E4EE38C039C6072218FA7/timetable/2018-2019-1
   ```
 
 * 响应示例：
@@ -139,16 +143,17 @@
   {
       "status": "success",
       "name": "Web应用开发技术",
-      "course_code": "0D8EAEC14F3E4EE38C039C6072218FA7",
-      "type": "专业选修课",
-      "week_list": [11,12,13,14,15,16,17,18],
-      "week_string": "11-18/全周",
-      "lesson": "10506",
-      "union_name": "软件1701-03",
       "room": "世B502",
-      "room_code": "2430502",
       "hour": 32,
+      "type": "专业选修课",
       "picked": 95,
+      "lesson": "10506",
+      "tea_class": "软件1701-03",
+      "card_code": "0D8EAEC14F3E4EE38C039C6072218FA7",
+      "room_code": "2430502",
+      "week_list": [11,12,13,14,15,16,17,18],
+      "course_code": "140102X1",
+      "week_string": "11-18/全周",
       "semester": "2018-2019-1",
       "student_list": [
           {
@@ -198,19 +203,20 @@
   {
       "status": "success",
       "name": "世B402",
-      "room_code": "2430402",
-      "building": "世B",
       "campus": "铁道校区",
+      "building": "世B",
+      "room_code": "2430402",
       "semester": "2018-2019-1",
       "course_list": [
           {
               "name": "毛泽东思想与中国特色社会主义理论体系概论",
-              "course_code": "F3AA2FE5715C4CDFAAB1DDE56B500097",
               "room": "世B402",
+              "lesson": "10506",
+              "card_code": "F3AA2FE5715C4CDFAAB1DDE56B500097",
               "room_code": "2430402",
               "week_list": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
               "week_string": "1-18/全周",
-              "lesson": "10506",
+              "course_code": "140102X1",
               "teacher_list": [
                   {
                       "teacher_code": "119043",
@@ -221,12 +227,13 @@
           },
           {
               "name": "毛泽东思想与中国特色社会主义理论体系概论",
-              "course_code": "AABF91ADE89244179D3587BB1CC2DF0E",
               "room": "世B402",
+              "lesson": "10506",
+              "card_code": "F3AA2FE5715C4CDFAAB1DDE56B500097",
               "room_code": "2430402",
-              "week_list": [13,14,15,16,17,18],
-              "week_string": "13-18/全周",
-              "lesson": "40506",
+              "week_list": [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
+              "week_string": "1-18/全周",
+              "course_code": "140102X1",
               "teacher_list": [
                   {
                       "teacher_code": "119043",
@@ -307,10 +314,10 @@
           "2017-2018-2",
           "2018-2019-2"
       ],
-      "course_list": [
+      "card_list": [
           {
               "name": "日语（二外）",
-              "course_code": "10B1D23F9CFA4FC6BD885904C07FA7AB",
+              "card_code": "10B1D23F9CFA4FC6BD885904C07FA7AB",
               "room": "世B102",
               "room_code": "2430102",
               "week_list": [3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18],
@@ -326,7 +333,7 @@
           },
           {
               "name": "云计算及应用",
-              "course_code": "23AA42B2C02544828961859CB0E2F1E2",
+              "code": "23AA42B2C02544828961859CB0E2F1E2",
               "room": "世B402",
               "room_code": "2430402",
               "week_list": [11,12,13,14,15,16,17,18],
@@ -419,10 +426,10 @@
           "2017-2018-2",
           "2018-2019-2"
       ],
-      "course_list": [
+      "card_list": [
           {
               "name": "大型数据库技术",
-              "course_code": "12E4C3DCB631491DB7F56F13873349C1",
+              "card_code": "12E4C3DCB631491DB7F56F13873349C1",
               "room": "世B402",
               "room_code": "2430402",
               "week_list": [3,4,5,6,7,8,9,10],
@@ -438,7 +445,7 @@
           },
           {
               "name": "云计算及应用",
-              "course_code": "42654979C8F540BA9956AFF401E73F5B",
+              "code": "42654979C8F540BA9956AFF401E73F5B",
               "room": "世B402",
               "room_code": "2430402",
               "week_list": [11,12,13,14,15,16,17,18],

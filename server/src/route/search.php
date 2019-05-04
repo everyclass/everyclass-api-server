@@ -18,7 +18,7 @@ $app->group('/search', function (App $app) {
 
     $app->get('/query', function (Request $request, Response $response) {
         $search_key = $request->getQueryParam("key", "");
-        $search_type = $request->getQueryParam("type", array("student", "teacher", "room", "vague_room"));
+        $search_type = $request->getQueryParam("type", array("student", "teacher", "room"));
         $page_size = intval($request->getQueryParam("page_size", 20));
         $page_index = intval($request->getQueryParam("page_index", 1));
         $sort_key = $request->getQueryParam("sort_key", null);
@@ -60,6 +60,7 @@ $app->group('/search', function (App $app) {
                     'name' => 1,
                     'data' => 1,
                     'semester' => 1,
+                    'pattern' => 1,
                     'type' => 1,
                 ],
                 'limit' => $page_size,
@@ -85,17 +86,21 @@ $app->group('/search', function (App $app) {
             $item[$item['type'] . '_code'] = $item['code'];
             $item['semester_list'] = (array)$item['semester'];
             $item = array_merge((array)$item, (array)$item['data']);
-            if($item['type'] == 'student'){
-                $item['class'] = $item['klass'];
-                unset($item['klass']);
-            }
             unset($item['data']);
             unset($item['code']);
             unset($item['semester']);
             $result [] = $item;
         }
         if (count($result) < 1) {
-            goto Not_found;
+            $result = [
+                'data' => [],
+                'info' => [
+                    'page_index' => 0,
+                    'page_size' => 0,
+                    'page_num' => 0,
+                    'count' => 0
+                ]
+            ];
         } else {
             $result = [
                 'data' => $result,
@@ -114,8 +119,6 @@ $app->group('/search', function (App $app) {
         // 异常访问出口
         Bad_request:
         return \WolfBolin\Slim\HTTP\Bad_request($response);
-        Not_found:
-        return \WolfBolin\Slim\HTTP\Not_found($response);
     });
 
 })->add(\WolfBolin\Slim\Middleware\x_auth_token())

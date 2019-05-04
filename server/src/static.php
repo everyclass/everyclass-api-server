@@ -18,34 +18,36 @@ return [
             `room`.`building`, 
             `room`.`campus`, 
             `card`.`name`,
-            `card`.`klassID`,
+            `card`.`code`,
             `card`.`room`,
-            `card`.`roomID`,
             `card`.`week`,
             `card`.`lesson`,
+            `card`.`room_code`,
+            `card`.`course_code`,
             `teacher`.`code`,
             `teacher`.`name`,
             `teacher`.`title`
             FROM `room` as room
-            LEFT JOIN `card` as card ON room.code = card.roomID 
+            LEFT JOIN `card` as card ON room.code = card.room_code 
             LEFT JOIN `teacher_link` as t_link USING(cid)
             LEFT JOIN `teacher` as teacher USING(tid) 
             WHERE card.`semester` = ? AND room.code = ?',
-        'course' => '
+        'card' => '
             SELECT 
             `card`.`name`,
-            `card`.`klassID`,
+            `card`.`code`,
             `card`.`room`,
-            `card`.`roomID`,
-            `card`.`week`,
-            `card`.`lesson`,
-            `card`.`klass`,
             `card`.`pick`,
             `card`.`hour`,
             `card`.`type`,
+            `card`.`week`,
+            `card`.`lesson`,
+            `card`.`tea_class`,
+            `card`.`room_code`,
+            `card`.`course_code`,
             `student`.`name`,
             `student`.`code`,
-            `student`.`klass`,
+            `student`.`class`,
             `student`.`deputy`,
             `teacher`.`name`,
             `teacher`.`code`,
@@ -56,15 +58,17 @@ return [
             LEFT JOIN `teacher_link` AS t_link USING(cid) 
             LEFT JOIN `student` AS student USING(sid)
             LEFT JOIN `teacher` as teacher USING(tid)
-            WHERE card.`semester` = ? AND card.`klassID` = ?',
+            WHERE card.`semester` = ? AND card.`code` = ?',
+//        'student_base' => "SELECT `name`, `code`, `class`, `deputy`, `campus`, `semester` WHERE `code` = '%s'",
         'student' => '
             SELECT 
             `card`.`name`,
-            `card`.`klassID`,
+            `card`.`code`,
             `card`.`room`,
-            `card`.`roomID`,
             `card`.`week`,
             `card`.`lesson`,
+            `card`.`room_code`,
+            `card`.`course_code`,
             `teacher`.`name`,
             `teacher`.`code`,
             `teacher`.`title`,
@@ -78,13 +82,14 @@ return [
         'teacher' => '
             SELECT 
             `card`.`name`,
-            `card`.`klassID`,
+            `card`.`code`,
             `card`.`room`,
-            `card`.`roomID`,
             `card`.`week`,
             `card`.`lesson`,
-            `c_teacher`.`code`,
+            `card`.`room_code`,
+            `card`.`course_code`,
             `c_teacher`.`name`, 
+            `c_teacher`.`code`,
             `c_teacher`.`title`,
             `c_teacher`.`unit`
             FROM `teacher` as teacher
