@@ -97,7 +97,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 }
                 $row = mysqli_fetch_row($sql_result);
                 $result['name'] = $row[0];
-                $result['code'] = $row[1];
+                $result['student_code'] = $row[1];
                 $result['class'] = $row[2];
                 $result['deputy'] = $row[3];
                 $result['campus'] = $row[4];
