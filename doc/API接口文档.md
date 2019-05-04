@@ -28,7 +28,7 @@
 
 初始版本，未发布前版本
 
-#### v0.2.0
+#### v0.1.10
 
 * 因课程相关用词体系修改，原有`course_list`修改为`card_list`。
 * `course_list`中原有的`course_code`修改为`card_code`。
