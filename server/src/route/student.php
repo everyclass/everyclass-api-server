@@ -19,20 +19,44 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
 
         // 查询数据库的学生信息
         $result = [];
+        // 查询学生可用学期
+        $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
+        $collection = $db->selectCollection('search');
+        $select_result = $collection->findOne(
+            [
+                'code' => $identifier,
+                'type' => 'student'
+            ],
+            [
+                'projection' => [
+                    '_id' => 0,
+                    'semester' => 1
+                ]
+            ]
+        );
+        if ($select_result) {
+            // 此人信息存在
+            $semester_list = (array)$select_result->getArrayCopy();
+            $semester_list = (array)$semester_list['semester'];
+        } else {
+            // 未找到此人信息
+            goto Not_found;
+        }
+
         $mysqli = $this->get('mysql_client');
         mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
-        if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['student_base'], $identifier))) {
+        if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['student_info'], $identifier))) {
             if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                 goto Not_found;
             }
             while ($row = mysqli_fetch_row($sql_result)) {
                 $result['name'] = $row[0];
-                $result['code'] = $row[1];
+                $result['student_code'] = $row[1];
                 $result['class'] = $row[2];
                 $result['deputy'] = $row[3];
                 $result['campus'] = $row[4];
-                $result['semester_list'] [] = $row[5];
             }
+            $result['semester_list'] = $semester_list;
         } else {
             goto Bad_request;
         }
@@ -69,7 +93,10 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
             $collection = $db->selectCollection('search');
             $select_result = $collection->findOne(
-                ['code' => $identifier],
+                [
+                    'code' => $identifier,
+                    'type' => 'student'
+                ],
                 [
                     'projection' => [
                         '_id' => 0,
@@ -90,7 +117,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $mysqli = $this->get('mysql_client');
             mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
             // 查询学生信息
-            $sql = sprintf($this->get('SQL')['student_info'], $semester, $identifier);
+            $sql = sprintf($this->get('SQL')['student_info'], $identifier);
             if ($sql_result = mysqli_query($mysqli, $sql)) {
                 if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                     goto Not_found;
@@ -108,7 +135,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             }
             // 查询学生课程
             $stmt = mysqli_prepare($mysqli, $this->get('SQL')['student']);
-            mysqli_stmt_bind_param($stmt, "ss", $semester, $identifier);
+            mysqli_stmt_bind_param($stmt, "s", $identifier);
             mysqli_stmt_execute($stmt);
             $stmt->bind_result($card_name, $card_code, $card_room, $card_week, $card_lesson,
                 $room_code, $course_code, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);

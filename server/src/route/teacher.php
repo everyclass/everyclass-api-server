@@ -19,20 +19,44 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
 
         // 查询数据库的教师信息
         $result = [];
+        // 查询教师可用学期
+        $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
+        $collection = $db->selectCollection('search');
+        $select_result = $collection->findOne(
+            [
+                'code' => $identifier,
+                'type' => 'teacher'
+            ],
+            [
+                'projection' => [
+                    '_id' => 0,
+                    'semester' => 1
+                ]
+            ]
+        );
+        if ($select_result) {
+            // 此人信息存在
+            $semester_list = (array)$select_result->getArrayCopy();
+            $semester_list = (array)$semester_list['semester'];
+        } else {
+            // 未找到此人信息
+            goto Not_found;
+        }
+
         $mysqli = $this->get('mysql_client');
         mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
-        if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['teacher_base'], $identifier))) {
+        if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['teacher_info'], $identifier))) {
             if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                 goto Not_found;
             }
             while ($row = mysqli_fetch_row($sql_result)) {
                 $result['name'] = $row[0];
-                $result['code'] = $row[1];
+                $result['teacher_code'] = $row[1];
                 $result['unit'] = $row[2];
                 $result['title'] = $row[3];
                 $result['degree'] = $row[4];
-                $result['semester_list'] [] = $row[5];
             }
+            $result['semester_list'] = $semester_list;
         } else {
             goto Bad_request;
         }
@@ -66,27 +90,51 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
 
             // 在数据库中查询数据
             $result = [];
+            $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
+            $collection = $db->selectCollection('search');
+            $select_result = $collection->findOne(
+                [
+                    'code' => $identifier,
+                    'type' => 'teacher'
+                ],
+                [
+                    'projection' => [
+                        '_id' => 0,
+                        'semester' => 1
+                    ]
+                ]
+            );
+            if ($select_result) {
+                // 此人信息存在
+                $semester_list = (array)$select_result->getArrayCopy();
+                $semester_list = (array)$semester_list['semester'];
+            } else {
+                // 未找到此人信息
+                goto Not_found;
+            }
+
             $mysqli = $this->get('mysql_client');
             mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
             // 查询教师信息
-            if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['teacher_base'], $identifier))) {
+            if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['teacher_info'], $identifier))) {
                 if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                     goto Not_found;
                 }
                 while ($row = mysqli_fetch_row($sql_result)) {
                     $result['name'] = $row[0];
-                    $result['code'] = $row[1];
+                    $result['teacher_code'] = $row[1];
                     $result['unit'] = $row[2];
                     $result['title'] = $row[3];
                     $result['degree'] = $row[4];
-                    $result['semester_list'] [] = $row[5];
+                    $result['semester'] = $semester;
+                    $result['semester_list'] = $semester_list;
                 }
             } else {
                 goto Bad_request;
             }
             // 查询教师课程
             $stmt = mysqli_prepare($mysqli, $this->get('SQL')['teacher']);
-            mysqli_stmt_bind_param($stmt, "ss", $semester, $identifier);
+            mysqli_stmt_bind_param($stmt, "s", $identifier);
             mysqli_stmt_execute($stmt);
             $stmt->bind_result($card_name, $card_code, $card_room, $card_week, $card_lesson,
                 $room_code, $course_code, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
