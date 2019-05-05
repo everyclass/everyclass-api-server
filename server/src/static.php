@@ -80,7 +80,7 @@ return [
             JOIN `card` as card USING(cid)
             JOIN `teacher_link` as t_link USING(cid)
             JOIN `teacher` as teacher USING(tid)
-            WHERE student.`code` = ?',
+            WHERE student.`code` = ? AND card.`semester` = ?',
         'teacher_info' => "
             SELECT `name`, `code`, `unit`, `title`, `degree`
             FROM `teacher` WHERE `code` = '%s'",
@@ -102,6 +102,6 @@ return [
             JOIN `card` as card ON teacher2card.cid = card.cid
             JOIN `teacher_link` as card2teacher ON card.cid = card2teacher.cid
             JOIN `teacher` as c_teacher ON card2teacher.tid = c_teacher.tid 
-            WHERE teacher.`code` = ?'
+            WHERE teacher.`code` = ? AND card.`semester` = ?'
     ]
 ];

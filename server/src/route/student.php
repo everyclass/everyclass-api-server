@@ -135,7 +135,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             }
             // 查询学生课程
             $stmt = mysqli_prepare($mysqli, $this->get('SQL')['student']);
-            mysqli_stmt_bind_param($stmt, "s", $identifier);
+            mysqli_stmt_bind_param($stmt, "ss", $identifier, $semester);
             mysqli_stmt_execute($stmt);
             $stmt->bind_result($card_name, $card_code, $card_room, $card_week, $card_lesson,
                 $room_code, $course_code, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
