@@ -161,7 +161,7 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 ];
             }
             if (count($card_list) < 1) {
-                goto Not_found;
+                $result['card_list'] = [];
             } else {
                 $result['card_list'] = array_values($card_list);
             }
