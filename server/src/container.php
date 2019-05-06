@@ -14,13 +14,14 @@ $container = $app->getContainer();
 
 // Sentry组建初始化
 $container['sentry_client'] = function (Container $a) {
-    $sentry_dsn = $a->get('Sentry_DSN');
-    $sentry = new Raven_Client($sentry_dsn,
+    $sentry = new Raven_Client(
+        $a->get('Sentry_DSN'),
         [
             'version' => $a->get('Version'),
             'php_version' => phpversion()
         ]
     );
+    $sentry->setEnvironment($a->get('Environment'));
     return $sentry;
 };
 
@@ -66,6 +67,7 @@ $container['notAllowedHandler'] = function ($a) {
 $container['errorHandler'] = function ($a) {
     return function (Request $request, Response $response, $exception) use ($a) {
         $sentry = new Raven_Client($a['Sentry_DSN']);
+        $sentry->setEnvironment($a['Environment']);
         $sentry->captureException($exception, array(
             'extra' => array(
                 'URL' => $request->getUri(),
@@ -82,6 +84,7 @@ $container['errorHandler'] = function ($a) {
 $container['phpErrorHandler'] = function ($a) {
     return function (Request $request, Response $response, $exception) use ($a) {
         $sentry = new Raven_Client($a['Sentry_DSN']);
+        $sentry->setEnvironment($a['Environment']);
         $sentry->captureException($exception, array(
             'extra' => array(
                 'URL' => $request->getUri(),

@@ -8,6 +8,7 @@
 
 return [
     'Version' => '',
+    'Environment' => '',
     'Sentry_DSN' => '',
     'Mongo_Token' => '',
     'MySQL_Token' => '',
