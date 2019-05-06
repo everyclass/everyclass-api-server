@@ -76,18 +76,6 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $semester = $args['semester'];
             $identifier = $args['identifier'];
 
-            // 验证请求学期数据
-            $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
-            $collection = $db->selectCollection('info');
-            $semester_list = $collection->findOne(
-                ['key' => 'semester_list']
-            );
-            $semester_list = (array)$semester_list->getArrayCopy();
-            $semester_list = (array)$semester_list['value'];
-            if (!in_array($semester, $semester_list)) {
-                goto Bad_request;
-            }
-
             // 查询数据库的学生可用学期
             $result = [];
             $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
@@ -111,6 +99,12 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             } else {
                 // 未找到此人信息
                 goto Not_found;
+            }
+
+
+            // 验证所查询学期课表是否存在
+            if (!in_array($semester, $semester_list)) {
+                goto Bad_request;
             }
 
             // 在数据库中查询数据
