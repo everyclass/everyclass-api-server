@@ -40,7 +40,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
         mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
         // 查询学生基本信息
         if ($sql_result = mysqli_query($mysqli,
-            sprintf($this->get('SQL')['base_info'], $identifier, 'student'))) {
+            sprintf($this->get('SQL')['student_info'], $identifier))) {
             // 实体存在性检验
             if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                 goto Not_found;
@@ -48,10 +48,9 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $row = mysqli_fetch_row($sql_result);
             $result['teacher_code'] = $row[0];
             $result['name'] = $row[1];
-            $data = json_decode($row[2], true);
-            $result['class'] = $data['class'];
-            $result['deputy'] = $data['deputy'];
-            $result['campus'] = $data['campus'];
+            $result['class'] = $row[2];
+            $result['deputy'] = $row[3];
+            $result['campus'] = $row[4];
             $result['semester_list'] = $semester_list;
         } else {
             goto Bad_request;
@@ -99,7 +98,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
             // 查询学生基本信息
             if ($sql_result = mysqli_query($mysqli,
-                sprintf($this->get('SQL')['base_info'], $identifier, 'student'))) {
+                sprintf($this->get('SQL')['student_info'], $identifier))) {
                 // 实体存在性检验
                 if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                     goto Not_found;
@@ -107,10 +106,9 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $row = mysqli_fetch_row($sql_result);
                 $result['teacher_code'] = $row[0];
                 $result['name'] = $row[1];
-                $data = json_decode($row[2], true);
-                $result['class'] = $data['class'];
-                $result['deputy'] = $data['deputy'];
-                $result['campus'] = $data['campus'];
+                $result['class'] = $row[2];
+                $result['deputy'] = $row[3];
+                $result['campus'] = $row[4];
                 $result['semester'] = $semester;
                 $result['semester_list'] = $semester_list;
             } else {

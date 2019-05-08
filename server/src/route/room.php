@@ -35,7 +35,7 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
 
         // 查询教室基本信息
         if ($sql_result = mysqli_query($mysqli,
-            sprintf($this->get('SQL')['base_info'], $identifier, 'room'))) {
+            sprintf($this->get('SQL')['room_info'], $identifier))) {
             // 实体存在性检验
             if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                 goto Not_found;
@@ -43,9 +43,8 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             $row = mysqli_fetch_row($sql_result);
             $result['room_code'] = $row[0];
             $result['name'] = $row[1];
-            $data = json_decode($row[2], true);
-            $result['campus'] = $data['campus'];
-            $result['building'] = $data['building'];
+            $result['campus'] = $row[2];
+            $result['building'] = $row[3];
             $result['semester_list'] = $semester_list;
         } else {
             goto Bad_request;
@@ -89,7 +88,7 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
 
             // 查询教室基本信息
             if ($sql_result = mysqli_query($mysqli,
-                sprintf($this->get('SQL')['base_info'], $identifier, 'room'))) {
+                sprintf($this->get('SQL')['room_info'], $identifier))) {
                 // 实体存在性检验
                 if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                     goto Not_found;
@@ -97,9 +96,8 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $row = mysqli_fetch_row($sql_result);
                 $result['room_code'] = $row[0];
                 $result['name'] = $row[1];
-                $data = json_decode($row[2], true);
-                $result['campus'] = $data['campus'];
-                $result['building'] = $data['building'];
+                $result['campus'] = $row[2];
+                $result['building'] = $row[3];
                 $result['semester'] = $semester;
                 $result['semester_list'] = $semester_list;
             } else {
