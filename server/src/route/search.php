@@ -35,10 +35,10 @@ $app->group('/search', function (App $app) {
             goto Bad_request;
         }
         if (!empty($sort_key)) {
-            if (!in_array($sort_key, ["code", "name", "type"]) || !in_array($sort_order, ["AES", "DESC"])) {
+            if (!in_array($sort_key, ["code", "name", "type"]) || !in_array($sort_order, ["ASC", "DESC"])) {
                 goto Bad_request;
             }
-            if($sort_order == "AES"){
+            if($sort_order == "ASC"){
                 $sort_order = 1;
             }else{
                 $sort_order = -1;
@@ -79,6 +79,8 @@ $app->group('/search', function (App $app) {
                 ]
             ]
         );
+
+        // 数据响应前整理
         $search_result = (array)$search_result->toArray();
         $search_count = (array)$search_count->toArray();
         $result = [];

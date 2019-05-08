@@ -13,49 +13,45 @@ use \Slim\Http\Response;
 use \WolfBolin\Everyclass\Tools as Tools;
 
 $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
-    $app->get('', function (Request $request,Response $response, $args) {
+    $app->get('', function (Request $request, Response $response, $args) {
         // 获取请求数据
         $identifier = $args['identifier'];
 
-        // 查询数据库的教师信息
+        // 在数据库中查询数据
         $result = [];
-        // 查询教师可用学期
+        // 使用MongoDB数据库
         $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
         $collection = $db->selectCollection('search');
+        // 查询可用学期信息
         $select_result = $collection->findOne(
-            [
-                'code' => $identifier,
-                'type' => 'teacher'
-            ],
-            [
-                'projection' => [
-                    '_id' => 0,
-                    'semester' => 1
-                ]
-            ]
+            ['code' => $identifier, 'type' => 'teacher'],
+            ['projection' => ['_id' => 0, 'semester' => 1]]
         );
+        // 实体存在性检验
         if ($select_result) {
-            // 此人信息存在
             $semester_list = (array)$select_result->getArrayCopy();
             $semester_list = (array)$semester_list['semester'];
         } else {
-            // 未找到此人信息
             goto Not_found;
         }
 
+        // 使用MySQL数据库
         $mysqli = $this->get('mysql_client');
         mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
-        if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['teacher_info'], $identifier))) {
+        // 查询教师基本信息
+        if ($sql_result = mysqli_query($mysqli,
+            sprintf($this->get('SQL')['base_info'], $identifier, 'teacher'))) {
+            // 实体存在性检验
             if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                 goto Not_found;
             }
-            while ($row = mysqli_fetch_row($sql_result)) {
-                $result['name'] = $row[0];
-                $result['teacher_code'] = $row[1];
-                $result['unit'] = $row[2];
-                $result['title'] = $row[3];
-                $result['degree'] = $row[4];
-            }
+            $row = mysqli_fetch_row($sql_result);
+            $result['teacher_code'] = $row[0];
+            $result['name'] = $row[1];
+            $data = json_decode($row[2], true);
+            $result['unit'] = $data['unit'];
+            $result['title'] = $data['title'];
+            $result['degree'] = $data['degree'];
             $result['semester_list'] = $semester_list;
         } else {
             goto Bad_request;
@@ -71,61 +67,57 @@ $app->group('/teacher/{identifier:[0-9a-zA-Z]+}', function (App $app) {
     });
 
     $app->get('/timetable/{semester:20[0-9]{2}-20[0-9]{2}-[1|2]}',
-        function (Request $request,Response $response, $args) {
+        function (Request $request, Response $response, $args) {
             // 获取请求数据
             $semester = $args['semester'];
             $identifier = $args['identifier'];
 
             // 在数据库中查询数据
             $result = [];
+            // 使用MongoDB数据库
             $db = new MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
             $collection = $db->selectCollection('search');
+            // 查询可用学期信息
             $select_result = $collection->findOne(
-                [
-                    'code' => $identifier,
-                    'type' => 'teacher'
-                ],
-                [
-                    'projection' => [
-                        '_id' => 0,
-                        'semester' => 1
-                    ]
-                ]
+                ['code' => $identifier, 'type' => 'teacher'],
+                ['projection' => ['_id' => 0, 'semester' => 1]]
             );
+            // 实体存在性检验
             if ($select_result) {
-                // 此人信息存在
                 $semester_list = (array)$select_result->getArrayCopy();
                 $semester_list = (array)$semester_list['semester'];
             } else {
-                // 未找到此人信息
                 goto Not_found;
             }
-
-            // 验证所查询学期课表是否存在
+            // 验证学期是否可用
             if (!in_array($semester, $semester_list)) {
                 goto Bad_request;
             }
 
+            // 使用MySQL数据库
             $mysqli = $this->get('mysql_client');
             mysqli_select_db($mysqli, $this->get('MySQL')['entity']);
-            // 查询教师信息
-            if ($sql_result = mysqli_query($mysqli, sprintf($this->get('SQL')['teacher_info'], $identifier))) {
+            // 查询教师基本信息
+            if ($sql_result = mysqli_query($mysqli,
+                sprintf($this->get('SQL')['base_info'], $identifier, 'teacher'))) {
+                // 实体存在性检验
                 if ($row_cnt = mysqli_num_rows($sql_result) == 0) {
                     goto Not_found;
                 }
-                while ($row = mysqli_fetch_row($sql_result)) {
-                    $result['name'] = $row[0];
-                    $result['teacher_code'] = $row[1];
-                    $result['unit'] = $row[2];
-                    $result['title'] = $row[3];
-                    $result['degree'] = $row[4];
-                    $result['semester'] = $semester;
-                    $result['semester_list'] = $semester_list;
-                }
+                $row = mysqli_fetch_row($sql_result);
+                $result['teacher_code'] = $row[0];
+                $result['name'] = $row[1];
+                $data = json_decode($row[2], true);
+                $result['unit'] = $data['unit'];
+                $result['title'] = $data['title'];
+                $result['degree'] = $data['degree'];
+                $result['semester'] = $semester;
+                $result['semester_list'] = $semester_list;
             } else {
                 goto Bad_request;
             }
-            // 查询教师课程
+
+            // 查询教师课表信息
             $stmt = mysqli_prepare($mysqli, $this->get('SQL')['teacher']);
             mysqli_stmt_bind_param($stmt, "ss", $identifier, $semester);
             mysqli_stmt_execute($stmt);

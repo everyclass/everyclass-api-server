@@ -11,12 +11,11 @@ return [
         'Mongo connection' => false,
     ],
     'SQL' => [
+        'base_info' => "
+            SELECT `code`,`name`,`data` 
+            FROM `entity` WHERE `code`='%s' AND `type`='%s';",
         'room' => '
-            SELECT 
-            `room`.`code`,
-            `room`.`name`, 
-            `room`.`building`, 
-            `room`.`campus`, 
+            SELECT
             `card`.`name`,
             `card`.`code`,
             `card`.`room`,
@@ -59,9 +58,6 @@ return [
             LEFT JOIN `student` AS student USING(sid)
             LEFT JOIN `teacher` as teacher USING(tid)
             WHERE card.`semester` = ? AND card.`code` = ?',
-        'student_info' => "
-            SELECT `name`, `code`, `class`, `deputy`, `campus`
-            FROM `student` WHERE `code` = '%s'",
         'student' => '
             SELECT 
             `card`.`name`,
@@ -81,9 +77,6 @@ return [
             JOIN `teacher_link` as t_link USING(cid)
             JOIN `teacher` as teacher USING(tid)
             WHERE student.`code` = ? AND card.`semester` = ?',
-        'teacher_info' => "
-            SELECT `name`, `code`, `unit`, `title`, `degree`
-            FROM `teacher` WHERE `code` = '%s'",
         'teacher' => '
             SELECT 
             `card`.`name`,
