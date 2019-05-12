@@ -36,7 +36,7 @@ $parameter = array_merge($config, $static);
 $app = new Slim\App($parameter);
 
 // 注册容器环境
-require __DIR__ . '/../src/container.php';
+require __DIR__ . '/../src/util/container.php';
 
 // 注册网络中间件
 require __DIR__ . '/../src/util/middleware.php';

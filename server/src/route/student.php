@@ -46,7 +46,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 goto Not_found;
             }
             $row = mysqli_fetch_row($sql_result);
-            $result['teacher_code'] = $row[0];
+            $result['student_code'] = $row[0];
             $result['name'] = $row[1];
             $result['class'] = $row[2];
             $result['deputy'] = $row[3];
@@ -104,7 +104,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                     goto Not_found;
                 }
                 $row = mysqli_fetch_row($sql_result);
-                $result['teacher_code'] = $row[0];
+                $result['student_code'] = $row[0];
                 $result['name'] = $row[1];
                 $result['class'] = $row[2];
                 $result['deputy'] = $row[3];
@@ -120,7 +120,7 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
             mysqli_stmt_bind_param($stmt, "ss", $identifier, $semester);
             mysqli_stmt_execute($stmt);
             $stmt->bind_result($card_name, $card_code, $card_room, $card_week, $card_lesson,
-                $room_code, $course_code, $teacher_name, $teacher_code, $teacher_title, $teacher_unit);
+                $room_code, $course_code, $student_name, $student_code, $student_title, $student_unit);
 
             $card_list = [];
             while ($stmt->fetch()) {
@@ -137,10 +137,10 @@ $app->group('/student/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $card_list[$card_code]['course_code'] = $course_code;
                 $card_list[$card_code]['week_string'] = Tools\week_encode($card_list[$card_code]['week_list']);
 
-                $card_list[$card_code]['teacher_list'] [] = [
-                    'teacher_code' => $teacher_code,
-                    'name' => $teacher_name,
-                    'title' => $teacher_title
+                $card_list[$card_code]['student_list'] [] = [
+                    'student_code' => $student_code,
+                    'name' => $student_name,
+                    'title' => $student_title
                 ];
             }
             if (count($card_list) < 1) {
