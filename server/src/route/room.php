@@ -126,11 +126,15 @@ $app->group('/room/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $card_list[$card_code]['week_string'] = Tools\week_encode($card_list[$card_code]['week_list']);
                 $card_list[$card_code]['course_code'] = $course_code;
 
-                $card_list[$card_code]['teacher_list'] [] = [
-                    'teacher_code' => $teacher_code,
-                    'name' => $teacher_name,
-                    'title' => $teacher_title
-                ];
+                if ($teacher_code) {
+                    $card_list[$card_code]['teacher_list'] [] = [
+                        'teacher_code' => $teacher_code,
+                        'name' => $teacher_name,
+                        'title' => $teacher_title
+                    ];
+                } elseif (!array_key_exists('teacher_list', $card_list[$card_code])) {
+                    $card_list[$card_code]['teacher_list'] = [];
+                }
             }
             if (count($result) < 1) {
                 $result['card_list'] = [];

@@ -13,13 +13,13 @@ use \Slim\Http\Response;
 use \WolfBolin\Everyclass\Tools as Tools;
 
 $app->group('/card/{identifier:[0-9a-zA-Z]+}', function (App $app) {
-    $app->get('', function (Request $request,Response $response) {
+    $app->get('', function (Request $request, Response $response) {
         $result = ['status' => 'success', 'info' => 'Hello, card!'];
         return $response->withJson($result);
     });
 
     $app->get('/timetable/{semester:20[0-9]{2}-20[0-9]{2}-[1|2]}',
-        function (Request $request,Response $response, $args) {
+        function (Request $request, Response $response, $args) {
             // 获取请求数据
             $semester = $args['semester'];
             $identifier = $args['identifier'];
@@ -68,15 +68,19 @@ $app->group('/card/{identifier:[0-9a-zA-Z]+}', function (App $app) {
                 $result['course_code'] = $course_code;
                 $result['week_string'] = Tools\week_encode($result['week_list']);
 
-                $student_list[$student_code]['name'] = $student_name;
-                $student_list[$student_code]['student_code'] = $student_code;
-                $student_list[$student_code]['class'] = $student_klass;
-                $student_list[$student_code]['deputy'] = $student_deputy;
+                if ($student_code) {
+                    $student_list[$student_code]['name'] = $student_name;
+                    $student_list[$student_code]['student_code'] = $student_code;
+                    $student_list[$student_code]['class'] = $student_klass;
+                    $student_list[$student_code]['deputy'] = $student_deputy;
+                }
 
-                $teacher_list[$teacher_code]['name'] = $teacher_name;
-                $teacher_list[$teacher_code]['teacher_code'] = $teacher_code;
-                $teacher_list[$teacher_code]['title'] = $teacher_title;
-                $teacher_list[$teacher_code]['unit'] = $teacher_unit;
+                if ($teacher_code) {
+                    $teacher_list[$teacher_code]['name'] = $teacher_name;
+                    $teacher_list[$teacher_code]['teacher_code'] = $teacher_code;
+                    $teacher_list[$teacher_code]['title'] = $teacher_title;
+                    $teacher_list[$teacher_code]['unit'] = $teacher_unit;
+                }
             }
             if (count($result) < 1) {
                 goto Not_found;
