@@ -41,25 +41,25 @@ function x_auth_token() {
 function access_record() {
     $result = function (Request $request, Response $response, callable $next) {
         $http_result = $next($request, $response);
-        $db = new \MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
-        $collection = $db->selectCollection('record');
-        $collection->insertOne([
-            'role' => $http_result->hasHeader('X-Auth-User') ? $http_result->getHeader('X-Auth-User')[0] : "guest",
-            'addr' => $_SERVER['REMOTE_ADDR'],
-            'code' => $response->getStatusCode(),
-            'method' => $request->getMethod(),
-            'scheme' => $request->getUri()->getScheme(),
-            'host' => $request->getUri()->getHost(),
-            'port' => $request->getUri()->getPort(),
-            'path' => $request->getUri()->getPath(),
-            'query' => $request->getUri()->getQuery(),
-            'fragment' => $request->getUri()->getFragment(),
-            'user_info' => $request->getUri()->getUserInfo(),
-            'authority' => $request->getUri()->getAuthority(),
-            'header' => $request->getHeaders(),
-            'time' => time(),
-            'date' => date("Y-m-d H:i:s")
-        ]);
+        // $db = new \MongoDB\Database($this->get('mongodb_client'), $this->get('MongoDB')['entity']);
+        // $collection = $db->selectCollection('record');
+        // $collection->insertOne([
+        //     'role' => $http_result->hasHeader('X-Auth-User') ? $http_result->getHeader('X-Auth-User')[0] : "guest",
+        //     'addr' => $_SERVER['REMOTE_ADDR'],
+        //     'code' => $response->getStatusCode(),
+        //     'method' => $request->getMethod(),
+        //     'scheme' => $request->getUri()->getScheme(),
+        //     'host' => $request->getUri()->getHost(),
+        //     'port' => $request->getUri()->getPort(),
+        //     'path' => $request->getUri()->getPath(),
+        //     'query' => $request->getUri()->getQuery(),
+        //     'fragment' => $request->getUri()->getFragment(),
+        //     'user_info' => $request->getUri()->getUserInfo(),
+        //     'authority' => $request->getUri()->getAuthority(),
+        //     'header' => $request->getHeaders(),
+        //     'time' => time(),
+        //     'date' => date("Y-m-d H:i:s")
+        // ]);
         return $http_result;
     };
     return $result;
