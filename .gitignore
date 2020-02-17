@@ -1,13 +1,2 @@
 # For wolfbolin
 .idea
-config.php
-
-
-# For Laravel
-vendor/
-node_modules/
-
-# Composer
-composer.phar
-composer.lock
-vendor/
