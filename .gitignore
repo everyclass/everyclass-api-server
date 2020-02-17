@@ -1,2 +1,4 @@
 # For wolfbolin
 .idea
+__pycache__
+Config/*.ini
