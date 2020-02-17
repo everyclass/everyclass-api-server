@@ -8,6 +8,8 @@ from flask import Flask
 from flask_cors import CORS
 from DBUtils.PooledDB import PooledDB
 
+from Student import student_blue
+
 # 获取配置
 app_config = Config.get_config()
 base_path = os.path.split(os.path.abspath(__file__))[0]
@@ -31,10 +33,7 @@ mysql_config = app.config.get('MYSQL')
 app.mysql_pool = PooledDB(creator=pymysql, **mysql_config, **pool_config)
 
 # 初始化路由
-# app.register_blueprint(webpage_blue, url_prefix='/webpage')
-# app.register_blueprint(network_blue, url_prefix='/network')
-# app.register_blueprint(message_blue, url_prefix='/message')
-# app.register_blueprint(monitor_blue, url_prefix='/monitor')
+app.register_blueprint(student_blue, url_prefix='/student')
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
 
