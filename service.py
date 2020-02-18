@@ -9,6 +9,7 @@ from flask_cors import CORS
 from DBUtils.PooledDB import PooledDB
 
 from Student import student_blue
+from Teacher import teacher_blue
 
 # 获取配置
 app_config = Config.get_config()
@@ -34,6 +35,7 @@ app.mysql_pool = PooledDB(creator=pymysql, **mysql_config, **pool_config)
 
 # 初始化路由
 app.register_blueprint(student_blue, url_prefix='/student')
+app.register_blueprint(teacher_blue, url_prefix='/teacher')
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
 
