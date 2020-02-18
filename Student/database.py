@@ -8,3 +8,6 @@ def read_student_info(conn, code):
     sql = "SELECT `code`,`name`,`class`,`campus`,`faculty` FROM `student` WHERE `code`=%s"
     cursor.execute(sql, args=[code])
     return cursor.fetchone()
+
+
+
