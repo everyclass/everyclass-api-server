@@ -3,13 +3,15 @@ import os
 import Util
 import Config
 import pymysql
-# import sentry_sdk
+import sentry_sdk
 from flask import Flask
 from flask import jsonify
 from flask_cors import CORS
 from DBUtils.PooledDB import PooledDB
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 from Room import room_blue
+from Search import search_blue
 from Lesson import lesson_blue
 from Student import student_blue
 from Teacher import teacher_blue
@@ -19,10 +21,10 @@ app_config = Config.get_config()
 base_path = os.path.split(os.path.abspath(__file__))[0]
 
 # Sentry
-# sentry_sdk.init(
-#     dsn=app_config['SENTRY']['dsn'],
-#     integrations=[FlaskIntegration()]
-# )
+sentry_sdk.init(
+    dsn=app_config['SENTRY']['dsn'],
+    integrations=[FlaskIntegration()]
+)
 
 # 初始化应用
 app = Flask(__name__)
@@ -38,6 +40,7 @@ app.mysql_pool = PooledDB(creator=pymysql, **mysql_config, **pool_config)
 
 # 初始化路由
 app.register_blueprint(room_blue, url_prefix='/room')
+app.register_blueprint(search_blue, url_prefix='/search')
 app.register_blueprint(lesson_blue, url_prefix='/lesson')
 app.register_blueprint(student_blue, url_prefix='/student')
 app.register_blueprint(teacher_blue, url_prefix='/teacher')
