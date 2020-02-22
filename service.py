@@ -61,7 +61,7 @@ def service_info():
     # 待优化
     data = {
         "status": "success",
-        "version": "0.1.0",
+        "version": "0.2.2",
         "service_state": "running",
         "service_notice": "服务正常运行",
         "data_time": "2020-02-20"
