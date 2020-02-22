@@ -5,9 +5,12 @@ import Config
 import pymysql
 # import sentry_sdk
 from flask import Flask
+from flask import jsonify
 from flask_cors import CORS
 from DBUtils.PooledDB import PooledDB
 
+from Room import room_blue
+from Lesson import lesson_blue
 from Student import student_blue
 from Teacher import teacher_blue
 
@@ -34,9 +37,44 @@ mysql_config = app.config.get('MYSQL')
 app.mysql_pool = PooledDB(creator=pymysql, **mysql_config, **pool_config)
 
 # 初始化路由
+app.register_blueprint(room_blue, url_prefix='/room')
+app.register_blueprint(lesson_blue, url_prefix='/lesson')
 app.register_blueprint(student_blue, url_prefix='/student')
 app.register_blueprint(teacher_blue, url_prefix='/teacher')
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
+
+
+@app.route("/")
+def hello_world():
+    data = {
+        "status": "success",
+        "info": "Hello, world!"
+    }
+    return jsonify(data)
+
+
+@app.route("/info/service")
+def service_info():
+    # 待优化
+    data = {
+        "status": "success",
+        "version": "0.1.0",
+        "service_state": "running",
+        "service_notice": "服务正常运行",
+        "data_time": "2020-02-20"
+    }
+    return jsonify(data)
+
+
+@app.route("/info/health")
+def health_info():
+    # 待优化
+    data = {
+        "status": "success",
+        "time": Util.unix_time(),
+        "MySQL": True,
+    }
+    return jsonify(data)
 
 
 @app.route('/debug/sentry')
