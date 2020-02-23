@@ -8,5 +8,4 @@ if not os.path.exists('./cache/log/'):
 backlog = 2048
 bind = '0.0.0.0:80'
 workers = multiprocessing.cpu_count() * 2 + 1
-accesslog = './cache/log/access.log'
-errorlog = './cache/log/error.log'
+threads = 4

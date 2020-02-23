@@ -24,6 +24,7 @@ def teacher_info(code):
     # 格式调整
     res = {"status": "success"}
     res.update(teacher_base_info)
+    res["unit"] = res.pop("department")
     res["teacher_code"] = res.pop("code")
     res["semester_list"] = available_semester
 
@@ -52,6 +53,7 @@ def teacher_timetable(code, semester):
         "semester": semester
     }
     res.update(teacher_base_info)
+    res["unit"] = res.pop("department")
     res["teacher_code"] = res.pop("code")
     res["semester_list"] = available_semester
     res["card_list"] = Common.lesson2card(lesson_data_list)

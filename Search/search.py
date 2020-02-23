@@ -43,9 +43,11 @@ def search_timetable():
         data["semester_list"] = json.loads(data.pop("semester"))
         data["type"] = data.pop("group")
         res["data"].append(data)
-    res["page_index"] = 1
-    res["page_size"] = len(res["data"])
-    res["page_num"] = 1
-    res["count"] = len(res["data"])
+    res["info"] = {
+        "page_index": 1,
+        "page_size": len(res["data"]),
+        "page_num": 1,
+        "count": len(res["data"])
+    }
 
     return jsonify(res)
