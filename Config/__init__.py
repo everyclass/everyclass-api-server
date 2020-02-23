@@ -6,9 +6,7 @@ import configparser
 
 def get_config():
     # 读取配置文件
-    run_env = 'production'
-    if 'SERVICE_ENV' in os.environ:
-        run_env = os.environ['SERVICE_ENV']
+    run_env = os.environ.get("SERVICE_ENV", "production")
     print("Load config [%s]" % run_env)
     config_path = '{}/{}.ini'.format(os.path.split(os.path.abspath(__file__))[0], run_env)
     if os.path.isfile(config_path):
@@ -22,6 +20,12 @@ def get_config():
                     app_config[option.upper()] = config.get(section, option)
             else:
                 app_config[section] = dict(config.items(section))
+
+        # DataDog config
+        app_config["DDOG"] = {
+            "host": os.environ.get("DD_AGENT_HOST", ""),
+            "port": os.environ.get("DD_TRACE_AGENT_PORT", ""),
+        }
 
         return app_config
     else:

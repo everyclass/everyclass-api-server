@@ -7,6 +7,8 @@ import sentry_sdk
 from flask import Flask
 from flask import jsonify
 from flask_cors import CORS
+from ddtrace import tracer
+from ddtrace import patch_all
 from DBUtils.PooledDB import PooledDB
 from sentry_sdk.integrations.flask import FlaskIntegration
 
@@ -24,6 +26,13 @@ base_path = os.path.split(os.path.abspath(__file__))[0]
 sentry_sdk.init(
     dsn=app_config['SENTRY']['dsn'],
     integrations=[FlaskIntegration()]
+)
+
+# DataDog
+patch_all()
+tracer.configure(
+    hostname=app_config["DDOG"]["host"],
+    port=app_config["DDOG"]["port"]
 )
 
 # 初始化应用

@@ -5,7 +5,7 @@ import pymysql
 # 读取可用学期
 def read_available_semester(conn, group, code):
     cursor = conn.cursor()
-    sql = "SELECT DISTINCT `semester` FROM `link` WHERE `object`=%s AND `group`=%s"
+    sql = "SELECT DISTINCT `semester` FROM `semester` WHERE `code`=%s AND `group`=%s"
     cursor.execute(sql, args=[code, group])
     return [obj[0] for obj in cursor.fetchall()]
 
@@ -29,8 +29,8 @@ def read_lesson_data(conn, group, code, semester):
         AND `link`.`session` = `lesson`.`session` 
         AND `link`.`semester` = `lesson`.`semester` 
     WHERE
-        `object` = %s 
-        AND `group` = %s 
+        `link`.`object` = %s 
+        AND `link`.`group` = %s 
         AND `link`.`semester` = %s
     """
     cursor.execute(sql, args=[code, group, semester])

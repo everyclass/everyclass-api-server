@@ -26,9 +26,9 @@ def room_timetable(code, semester):
     except ValueError:
         return abort(400)
 
-    course_info = read_course_info(conn, lesson, session)
-    student_list = read_student_list(conn, lesson, session)
-    teacher_list = read_teacher_list(conn, lesson, session)
+    course_info = read_course_info(conn, lesson, session, semester)
+    student_list = read_student_list(conn, lesson, session, semester)
+    teacher_list = read_teacher_list(conn, lesson, session, semester)
 
     res = {
         "status": "success",

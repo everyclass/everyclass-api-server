@@ -11,6 +11,7 @@ pymysql = "*"
 dbutils = "*"
 flask-cors = "*"
 sentry-sdk = {extras = ["flask"],version = "==0.13.4"}
+ddtrace = "*"
 
 [requires]
 python_version = "3.7"

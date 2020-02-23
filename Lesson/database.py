@@ -3,7 +3,7 @@ import pymysql
 
 
 # 读取课程基本信息
-def read_course_info(conn, lesson, session):
+def read_course_info(conn, lesson, session, semester):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     sql = """
     SELECT
@@ -16,14 +16,15 @@ def read_course_info(conn, lesson, session):
     WHERE
         `link`.`lesson` = %s
         AND `link`.`session` = %s
+        AND `link`.`semester` = %s
         AND `link`.`group`='course'
     """
-    cursor.execute(sql, args=[lesson, session])
+    cursor.execute(sql, args=[lesson, session, semester])
     return cursor.fetchone()
 
 
 # 读取学生基本信息
-def read_student_list(conn, lesson, session):
+def read_student_list(conn, lesson, session, semester):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     sql = """
     SELECT
@@ -37,9 +38,10 @@ def read_student_list(conn, lesson, session):
     WHERE
         `link`.`lesson` = %s
         AND `link`.`session` = %s
+        AND `link`.`semester` = %s
         AND `link`.`group`='student'
     """
-    cursor.execute(sql, args=[lesson, session])
+    cursor.execute(sql, args=[lesson, session, semester])
 
     student_list = []
     for item in cursor.fetchall():
@@ -49,7 +51,7 @@ def read_student_list(conn, lesson, session):
 
 
 # 读取教师基本信息
-def read_teacher_list(conn, lesson, session):
+def read_teacher_list(conn, lesson, session, semester):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     sql = """
     SELECT
@@ -62,9 +64,10 @@ def read_teacher_list(conn, lesson, session):
     WHERE
         `link`.`lesson` = %s
         AND `link`.`session` = %s
+        AND `link`.`semester` = %s
         AND `link`.`group`='teacher'
     """
-    cursor.execute(sql, args=[lesson, session])
+    cursor.execute(sql, args=[lesson, session, semester])
     teacher_list = []
     for item in cursor.fetchall():
         item["teacher_code"] = item.pop("code")
