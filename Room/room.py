@@ -21,8 +21,8 @@ def room_timetable(code, semester):
 
     # 查询数据
     room_base_info = read_room_info(conn, code)
-    available_semester = Common.read_available_semester(conn, "room", code)
-    room_data_list = Common.read_lesson_data(conn, "room", code, semester)
+    available_semester = Common.read_available_semester(conn, code, "room")
+    room_data_list = Common.read_lesson_data(conn, code, "room", semester)
 
     # 格式调整
     res = {

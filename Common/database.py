@@ -3,14 +3,14 @@ import pymysql
 
 
 # 读取可用学期
-def read_available_semester(conn, group, code):
+def read_available_semester(conn, code, group):
     cursor = conn.cursor()
     sql = "SELECT DISTINCT `semester` FROM `semester` WHERE `code`=%s AND `group`=%s"
     cursor.execute(sql, args=[code, group])
     return [obj[0] for obj in cursor.fetchall()]
 
 
-def read_lesson_data(conn, group, code, semester):
+def read_lesson_data(conn, code, group, semester):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     sql = """
     SELECT
@@ -35,3 +35,13 @@ def read_lesson_data(conn, group, code, semester):
     """
     cursor.execute(sql, args=[code, group, semester])
     return cursor.fetchall()
+
+
+def read_remark_data(conn, code, group, semester):
+    cursor = conn.cursor()
+    sql = "SELECT `remark` FROM `remark` WHERE `code`=%s AND `group`=%s AND `semester`=%s"
+    cursor.execute(sql, args=[code, group, semester])
+    res = cursor.fetchone()
+    if res is None:
+        return ""
+    return res[0]

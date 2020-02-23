@@ -19,7 +19,7 @@ def teacher_info(code):
 
     # 查询数据
     teacher_base_info = read_teacher_info(conn, code)
-    available_semester = Common.read_available_semester(conn, "teacher", code)
+    available_semester = Common.read_available_semester(conn, code, "teacher")
 
     # 格式调整
     res = {"status": "success"}
@@ -44,8 +44,9 @@ def teacher_timetable(code, semester):
 
     # 查询数据
     teacher_base_info = read_teacher_info(conn, code)
-    available_semester = Common.read_available_semester(conn, "teacher", code)
-    lesson_data_list = Common.read_lesson_data(conn, "teacher", code, semester)
+    available_semester = Common.read_available_semester(conn, code, "teacher")
+    lesson_data_list = Common.read_lesson_data(conn, code, "teacher", semester)
+    remark_info = Common.read_remark_data(conn, code, "teacher", semester)
 
     # 格式调整
     res = {
@@ -53,6 +54,7 @@ def teacher_timetable(code, semester):
         "semester": semester
     }
     res.update(teacher_base_info)
+    res["remark"] = remark_info
     res["unit"] = res.pop("department")
     res["teacher_code"] = res.pop("code")
     res["semester_list"] = available_semester
