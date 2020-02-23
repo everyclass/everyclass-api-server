@@ -109,5 +109,5 @@ def service_error(msg):
 
 
 if __name__ == '__main__':
-    app.run(host=app_config['HOST'], port=app_config['PORT'])
+    app.run(host=app_config['HOST'], port=app_config['PORT'], debug=True)
     exit()
