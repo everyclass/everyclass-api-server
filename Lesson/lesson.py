@@ -26,9 +26,13 @@ def room_timetable(code, semester):
     except ValueError:
         return abort(400)
 
+    room_info = read_room_info(conn, lesson, session, semester)
     course_info = read_course_info(conn, lesson, session, semester)
     student_list = read_student_list(conn, lesson, session, semester)
     teacher_list = read_teacher_list(conn, lesson, session, semester)
+
+    room_info["room"] = room_info.pop("name")
+    room_info["room_code"] = room_info.pop("code")
 
     for item in student_list:
         item["deputy"] = item.pop("department")
@@ -44,6 +48,7 @@ def room_timetable(code, semester):
         "card_code": code,
         "lesson": session
     }
+    res.update(room_info)
     res.update(course_info)
     res["student_list"] = student_list
     res["teacher_list"] = teacher_list

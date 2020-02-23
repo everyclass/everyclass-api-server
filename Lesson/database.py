@@ -2,6 +2,27 @@
 import pymysql
 
 
+# 读取教室基本信息
+def read_room_info(conn, lesson, session, semester):
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    sql = """
+    SELECT
+        `room`.`code`,
+        `room`.`name`,
+        `room`.`campus`,
+        `room`.`building`
+    FROM
+        `link` LEFT JOIN `room` ON `link`.`object` = `room`.`code`
+    WHERE
+        `link`.`lesson` = %s
+        AND `link`.`session` = %s
+        AND `link`.`semester` = %s
+        AND `link`.`group`='room'
+    """
+    cursor.execute(sql, args=[lesson, session, semester])
+    return cursor.fetchone()
+
+
 # 读取课程基本信息
 def read_course_info(conn, lesson, session, semester):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
