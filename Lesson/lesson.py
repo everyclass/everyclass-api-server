@@ -31,8 +31,16 @@ def room_timetable(code, semester):
     student_list = read_student_list(conn, lesson, session, semester)
     teacher_list = read_teacher_list(conn, lesson, session, semester)
 
-    room_info["room"] = room_info.pop("name")
-    room_info["room_code"] = room_info.pop("code")
+    if room_info is None:
+        room_info = {
+            "room": "",
+            "room_code": "",
+            "campus": "",
+            "building": ""
+        }
+    else:
+        room_info["room"] = room_info.pop("name")
+        room_info["room_code"] = room_info.pop("code")
 
     for item in student_list:
         item["deputy"] = item.pop("department")
