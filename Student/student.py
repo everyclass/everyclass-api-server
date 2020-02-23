@@ -23,6 +23,7 @@ def student_info(code):
 
     res = {"status": "success"}
     res.update(student_base_info)
+    res["deputy"] = res.pop("department")
     res["student_code"] = res.pop("code")
     res["semester_list"] = available_semester
 
@@ -51,6 +52,7 @@ def student_timetable(code, semester):
         "semester": semester
     }
     res.update(student_base_info)
+    res["deputy"] = res.pop("department")
     res["student_code"] = res.pop("code")
     res["semester_list"] = available_semester
     res["card_list"] = Common.lesson2card(lesson_data_list)
