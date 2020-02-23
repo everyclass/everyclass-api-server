@@ -17,4 +17,4 @@ RUN pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip \
     && pip install -i https://pypi.tuna.tsinghua.edu.cn/simple gunicorn \
     && pip install -i https://pypi.tuna.tsinghua.edu.cn/simple -r requirements.txt
 
-CMD ["gunicorn","-c","gunicorn.py","service:app"]
+CMD ["gunicorn","--log-level=debug","-c","gunicorn.py","service:app"]
