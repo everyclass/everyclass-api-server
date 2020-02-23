@@ -1,5 +1,6 @@
 # coding=utf-8
 import re
+import json
 import Util
 import Common
 import Lesson
@@ -26,29 +27,22 @@ def room_timetable(code, semester):
     except ValueError:
         return abort(400)
 
-    room_info = read_room_info(conn, lesson, session, semester)
-    course_info = read_course_info(conn, lesson, session, semester)
+    lesson_info = read_lesson_info(conn, lesson, session, semester)
     student_list = read_student_list(conn, lesson, session, semester)
-    teacher_list = read_teacher_list(conn, lesson, session, semester)
 
-    if room_info is None:
-        room_info = {
-            "room": "",
-            "room_code": "",
-            "campus": "",
-            "building": ""
-        }
-    else:
-        room_info["room"] = room_info.pop("name")
-        room_info["room_code"] = room_info.pop("code")
+    lesson_info.pop("code")
+    lesson_info["teacher_list"] = json.loads(lesson_info["teacher_list"])
+    lesson_info["week_list"] = json.loads(lesson_info.pop("week"))
+    lesson_info["week_string"] = lesson_info.pop("week_str")
+    lesson_info["name"] = lesson_info.pop("course_name")
+    lesson_info["room"] = lesson_info.pop("room_name")
+
+    for item in lesson_info["teacher_list"]:
+        item["unit"] = item.pop("department")
 
     for item in student_list:
         item["deputy"] = item.pop("department")
         item["student_code"] = item.pop("code")
-
-    for item in teacher_list:
-        item["unit"] = item.pop("department")
-        item["teacher_code"] = item.pop("code")
 
     res = {
         "status": "success",
@@ -56,9 +50,7 @@ def room_timetable(code, semester):
         "card_code": code,
         "lesson": session
     }
-    res.update(room_info)
-    res.update(course_info)
+    res.update(lesson_info)
     res["student_list"] = student_list
-    res["teacher_list"] = teacher_list
 
     return jsonify(res)

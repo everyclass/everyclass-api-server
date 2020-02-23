@@ -2,44 +2,10 @@
 import pymysql
 
 
-# 读取教室基本信息
-def read_room_info(conn, lesson, session, semester):
+# 读取节次基本数据
+def read_lesson_info(conn, lesson, session, semester):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    sql = """
-    SELECT
-        `room`.`code`,
-        `room`.`name`,
-        `room`.`campus`,
-        `room`.`building`
-    FROM
-        `link` LEFT JOIN `room` ON `link`.`object` = `room`.`code`
-    WHERE
-        `link`.`lesson` = %s
-        AND `link`.`session` = %s
-        AND `link`.`semester` = %s
-        AND `link`.`group`='room'
-    """
-    cursor.execute(sql, args=[lesson, session, semester])
-    return cursor.fetchone()
-
-
-# 读取课程基本信息
-def read_course_info(conn, lesson, session, semester):
-    cursor = conn.cursor(pymysql.cursors.DictCursor)
-    sql = """
-    SELECT
-        `course`.`code`,
-        `course`.`name`,
-        `course`.`type`,
-        `course`.`faculty`
-    FROM
-        `link` LEFT JOIN `course` ON `link`.`object` = `course`.`code`
-    WHERE
-        `link`.`lesson` = %s
-        AND `link`.`session` = %s
-        AND `link`.`semester` = %s
-        AND `link`.`group`='course'
-    """
+    sql = "SELECT * FROM `lesson` WHERE `code`=%s AND `session`=%s AND `semester`=%s"
     cursor.execute(sql, args=[lesson, session, semester])
     return cursor.fetchone()
 
@@ -61,27 +27,6 @@ def read_student_list(conn, lesson, session, semester):
         AND `link`.`session` = %s
         AND `link`.`semester` = %s
         AND `link`.`group`='student'
-    """
-    cursor.execute(sql, args=[lesson, session, semester])
-    return cursor.fetchall()
-
-
-# 读取教师基本信息
-def read_teacher_list(conn, lesson, session, semester):
-    cursor = conn.cursor(pymysql.cursors.DictCursor)
-    sql = """
-    SELECT
-        `teacher`.`code`,
-        `teacher`.`name`,
-        `teacher`.`title`,
-        `teacher`.`department`
-    FROM
-        `link` LEFT JOIN `teacher` ON `link`.`object` = `teacher`.`code`
-    WHERE
-        `link`.`lesson` = %s
-        AND `link`.`session` = %s
-        AND `link`.`semester` = %s
-        AND `link`.`group`='teacher'
     """
     cursor.execute(sql, args=[lesson, session, semester])
     return cursor.fetchall()
