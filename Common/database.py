@@ -14,8 +14,8 @@ def read_lesson_data(conn, code, group, semester):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     sql = """
     SELECT
-        `link`.`lesson`,
-        `link`.`session`,
+        `lesson`.`code`,
+        `lesson`.`session`,
         `lesson`.`week`,
         `lesson`.`week_str`,
         `lesson`.`course_code`,

@@ -30,15 +30,7 @@ def room_timetable(code, semester):
     lesson_info = read_lesson_info(conn, lesson, session, semester)
     student_list = read_student_list(conn, lesson, session, semester)
 
-    lesson_info.pop("code")
-    lesson_info["teacher_list"] = json.loads(lesson_info["teacher_list"])
-    lesson_info["week_list"] = json.loads(lesson_info.pop("week"))
-    lesson_info["week_string"] = lesson_info.pop("week_str")
-    lesson_info["name"] = lesson_info.pop("course_name")
-    lesson_info["room"] = lesson_info.pop("room_name")
-
-    for item in lesson_info["teacher_list"]:
-        item["unit"] = item.pop("department")
+    lesson_info = Common.lesson2card([lesson_info])[0]
 
     for item in student_list:
         item["deputy"] = item.pop("department")
