@@ -30,6 +30,14 @@ def room_timetable(code, semester):
     student_list = read_student_list(conn, lesson, session, semester)
     teacher_list = read_teacher_list(conn, lesson, session, semester)
 
+    for item in student_list:
+        item["deputy"] = item.pop("department")
+        item["student_code"] = item.pop("code")
+
+    for item in teacher_list:
+        item["unit"] = item.pop("department")
+        item["teacher_code"] = item.pop("code")
+
     res = {
         "status": "success",
         "semester": semester,
