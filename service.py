@@ -12,6 +12,7 @@ from ddtrace import patch_all
 from DBUtils.PooledDB import PooledDB
 from sentry_sdk.integrations.flask import FlaskIntegration
 
+from Info import info_blue
 from Room import room_blue
 from Search import search_blue
 from Lesson import lesson_blue
@@ -48,6 +49,7 @@ mysql_config = app.config.get('MYSQL')
 app.mysql_pool = PooledDB(creator=pymysql, **mysql_config, **pool_config)
 
 # 初始化路由
+app.register_blueprint(info_blue, url_prefix='/info')
 app.register_blueprint(room_blue, url_prefix='/room')
 app.register_blueprint(search_blue, url_prefix='/search')
 app.register_blueprint(lesson_blue, url_prefix='/lesson')
@@ -63,36 +65,6 @@ def hello_world():
         "info": "Hello, world!"
     }
     return jsonify(data)
-
-
-@app.route("/info/service")
-def service_info():
-    # 待优化
-    data = {
-        "status": "success",
-        "version": "0.2.2",
-        "service_state": "running",
-        "service_notice": "服务正常运行",
-        "data_time": "2020-02-20"
-    }
-    return jsonify(data)
-
-
-@app.route("/info/health")
-def health_info():
-    # 待优化
-    data = {
-        "status": "success",
-        "time": Util.unix_time(),
-        "MySQL": True,
-    }
-    return jsonify(data)
-
-
-@app.route('/debug/sentry')
-def sentry_debug():
-    Util.print_red("Test sentry: {}".format(1 / 0), tag="DEBUG")
-    return Util.common_rsp("DEBUG")
 
 
 @app.errorhandler(400)
