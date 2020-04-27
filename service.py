@@ -26,7 +26,8 @@ base_path = os.path.split(os.path.abspath(__file__))[0]
 # Sentry
 sentry_sdk.init(
     dsn=app_config['SENTRY']['dsn'],
-    integrations=[FlaskIntegration()]
+    integrations=[FlaskIntegration()],
+    environment=os.environ.get("SERVICE_ENV", "unknown")
 )
 
 # DataDog

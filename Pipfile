@@ -14,4 +14,4 @@ sentry-sdk = {extras = ["flask"],version = "==0.13.4"}
 ddtrace = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.8"
