@@ -1,11 +1,29 @@
 # coding=utf-8
 import re
+import json
 import Util
-import Common
 import Room
+import Common
+from flask import abort
+from flask import request
 from flask import jsonify
 from Room.database import *
 from flask import current_app as app
+
+
+@Room.room_blue.route('/')
+def room_group():
+    conn = app.mysql_pool.connection()
+
+    room_group_dict = Common.read_kvdb(conn, "room_group")
+    room_group_dict = json.loads(room_group_dict)
+
+    res = {
+        "status": "OK",
+        "room_group": room_group_dict
+    }
+
+    return jsonify(res)
 
 
 @Room.room_blue.route("/<code>")

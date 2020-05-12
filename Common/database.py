@@ -2,6 +2,14 @@
 import pymysql
 
 
+# 读取数据刷新日期
+def read_kvdb(conn, key):
+    cursor = conn.cursor()
+    sql = "SELECT `val` FROM `kvdb` WHERE `key`=%s"
+    cursor.execute(sql, args=[key])
+    return cursor.fetchone()[0]
+
+
 # 读取可用学期
 def read_available_semester(conn, code, group):
     cursor = conn.cursor()

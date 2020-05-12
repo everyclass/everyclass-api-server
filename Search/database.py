@@ -16,3 +16,12 @@ def search_by_key_with_group(conn, key, group):
     sql = "SELECT * FROM `search` WHERE `key` = %s AND `group`=%s"
     cursor.execute(sql, args=[key, group])
     return cursor.fetchall()
+
+
+# 读取指定节次空教室
+def read_available_room(conn, week, session):
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    sql = "SELECT `code`,`name`,`week%s` FROM `avl_room` " \
+          "WHERE `session`=%s AND `week%s`!=''"
+    cursor.execute(sql, args=[week, session, week])
+    return cursor.fetchall()

@@ -95,9 +95,9 @@
 
 
 
-## 模糊搜索
+## 搜索接口
 
-### 综合搜索
+### 对象搜索
 
 * 说明：提供首页搜索功能服务接口
 
@@ -107,12 +107,10 @@
   GET /search/query?key=fhx&group=teacher
   ```
 
-* 请求示例：
-
 * 参数（Query string）：
 
   * `key`：字符串，搜索值（搜索字符串最短不可小于2个字符）
-  * `group`：字符串数组、搜索分类（可在`course`,`teacher`,`student`,`room`中选择一项）
+  * `group`：字符串，搜索分类（可在`course`,`teacher`,`student`,`room`中选择一项）
 
 * 说明：
 
@@ -128,7 +126,7 @@
       "status": "success",
       "data": [
           {
-              "teacher_code": "0201130230",
+              "code": "0201130230",
               "name": "返魂香",
               "group": "teacher",
               "title": "副教授",
@@ -143,7 +141,7 @@
               ]
           },
           {
-              "student_code": "0201130230",
+              "code": "0201130230",
               "name": "范海辛",
               "group": "student",
               "deputy": "文学院",
@@ -153,17 +151,70 @@
                   "2016-2017-2"
               ]
           }
-  	],
-      "info": {
-          "page_index": 1,
-          "page_size": 3,
-          "page_num": 2,
-          "count": 3
-      }
+  	]
   }
   ```
 
 
+
+### 空教室搜索
+
+* 请求示例：
+
+  ```
+  GET /search/room/available?week=15&session=10102&campus=新校区&building=A座
+  ```
+
+* 参数（Query string）：
+
+  * `week`：字符串，周次（必填）
+  * `session`：字符串，节次（必填）
+  * `campus`：字符串，校区（可选，参照`/room`返回值）
+  * `building`：字符串，建筑（可选，参照`/room`返回值）
+
+* 说明：
+
+  * 填充参数`building`时必须填充`campus`参数
+
+* 响应示例：
+
+  ```json
+  {
+      "room_list": [
+          {
+              "code": "9010102",
+              "info": {
+                  "course_code": "140101X10",
+                  "course_name": "大学物理A（一）",
+                  "lesson": "B19251E6198F44519FD2B0B0C5BD7AC7"
+              },
+              "name": "A座102"
+          },
+          {
+              "code": "9010110",
+              "info": {
+                  "course_code": "090141X20",
+                  "course_name": "数字信号处理",
+                  "lesson": "C0C4782A1A0746C893A19DDBE38E57C4"
+              },
+              "name": "A座110"
+          },
+          {
+              "code": "9010122",
+              "info": {
+                  "course_code": "080211X10",
+                  "course_name": "机械设计",
+                  "lesson": "127A77A68741411986FE6B09D7EF8BAB"
+              },
+              "name": "A座122"
+          },
+          ......
+      ],
+      "status": "OK"
+  }
+  ```
+
+  
 
 ## 信息查询
 
@@ -224,7 +275,55 @@
   }
   ```
 
+
+
 ### 教室查询
+
+#### 教室位置分组
+
+- 说明：提供校区、教学楼、教室之间的层级关系
+
+- 请求示例：
+
+  ```
+  GET /room
+  ```
+
+- 响应示例：
+
+  ```json
+  {
+      "room_group": {
+          "南校区": {
+              "一教": [
+                  "1310419",
+                  "1310420"
+              ],
+              "三教": [
+                  "351104",
+                  "351203",
+                  "351301",
+                  "351302",
+                  "351303",
+                  "351304",
+                  "351305"
+              ],
+              "二教": [
+                  "1320213",
+                  "1320216",
+                  "324204",
+                  "324207"
+              ]
+          }
+          ......
+      },
+      "status": "OK"
+  }
+  ```
+
+  
+
+#### 教室课表信息
 
 - URL：`/room/{教室编号}/timetable/{学期}`
 
