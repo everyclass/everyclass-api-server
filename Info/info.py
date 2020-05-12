@@ -11,22 +11,13 @@ from flask import current_app as app
 
 @Info.info_blue.route("/service")
 def service_info():
-    # TODO 待优化
+    conn = app.mysql_pool.connection()
     data = {
         "status": "success",
-        "version": "0.2.2",
-        "service_state": "running",
-        "service_notice": "服务正常运行",
-        "data_time": "2020-02-29"
-    }
-    return jsonify(data)
-
-
-@Info.info_blue.route("/health")
-def health_info():
-    # TODO 待优化
-    data = {
-        "MySQL": True,
+        "version": app.config["BASE"]["version"],
+        "service_state": read_kvdb(conn, "service_state"),
+        "service_notice": read_kvdb(conn, "service_notice"),
+        "data_time": read_kvdb(conn, "data_time")
     }
     return Util.common_rsp(data)
 

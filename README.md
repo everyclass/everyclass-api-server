@@ -12,12 +12,6 @@
 
 
 
-### API Key
-
-在使用前，你需要先申请 API Key。若无特别说明，以下接口均需要 API Key。API Key 的使用方法为在 HTTP Header 中加入 `X-Auth-Token`，内容为你的 API Key。
-
-
-
 ### 更新日志
 
 **特别提醒**：所有线上服务，协议版本均应保持版本号前两位为一致的。
@@ -41,32 +35,84 @@
 * 教师信息中新增新增`degree`字段，表示教师学历（可能是空字符串）。
 * 更新学生信息获取方式，优先获取当前学期的信息。
 
+## 基础接口
+
+### 测试连通性
+
+- 说明：基本连通性测试接口
+
+- 请求示例：
+
+  ```
+  GET /
+  ```
+
+- 响应示例：
+
+  ```json
+  {
+    "code": 92000,
+    "data": {
+      "info": "Hello, world!",
+      "status": "success"
+    },
+    "method": "hello_world",
+    "status": "OK",
+    "time": 1589279052,
+    "timestamp": "2020-05-12 18:24:13"
+  }
+  ```
+
+### 服务信息
+
+- 说明：主要提供服务状态、数据版本、接口版本等信息
+
+- 请求示例：
+
+  ```
+  GET /info/service
+  ```
+
+- 响应示例：
+
+  ```json
+  {
+    "code": 92000,
+    "data": {
+      "data_time": "2020-04-26",
+      "service_notice": "服务正常运行",
+      "service_state": "running",
+      "status": "success",
+      "version": "0.3.0"
+    },
+    "method": "service_info",
+    "status": "OK",
+    "time": 1589279872,
+    "timestamp": "2020-05-12 18:37:52"
+  }
+  ```
+
+
+
+
 ## 模糊搜索
 
 ### 综合搜索
 
-* URL：`/search/query?{搜索参数}`
+* 说明：提供首页搜索功能服务接口
 
-* 方法：`GET`
+* 请求示例：
+
+  ```
+  GET /search/query?key=fhx&group=teacher
+  ```
+
+* 请求示例：
 
 * 参数（Query string）：
 
   * `key`：字符串，搜索值（搜索字符串最短不可小于2个字符）
-  * `type`：字符串数组、搜索分类（可在`student`,`teacher`,`room`,`vague_room`中选择一项或多项）
-  * `page_size`：数字，分页大小（默认值20，最小值2，最大值100）
-  * `page_index`：数字，分页页数（默认值为1，从1计数的分页下标）
-  * `sort_key`：字符串，排序主键（可在`code`,`name`,`type`中选择**一项**）
-  * `sort_order`：字符串，排序方式（默认为`ASC`，可在`ASC`,`DESC`中选择**一项**）
-
-* 成功响应：
-
-  * `status`：响应结果，正常情况下为`success`
-  * `data`：搜索结果，读取方式请参考示例
-  * `info`：辅助信息，包括`page_num`、`page_size`、`count`
-    * `page_size`：分页大小（用户指定的分页大小）
-    * `page_index`：分页页数（从1计数的分页下标）
-    * `page_num`：分页数量（按照当前分页大小计算）
-    * `count`：data 数组长度（请根据type类型区分不同的对象）
+  * `group`：字符串数组、搜索分类（可在`course`,`teacher`,`student`,`room`中选择一项）
 
 * 说明：
 
@@ -74,15 +120,6 @@
   * 若姓名中出现符号，可以忽略符号进行拼音搜索。例如搜索“每·课”，可通过"mk"、"meike"、“每·课”进行搜索，暂不支持其他搜索方案。
   * 外籍学生若使用中文名称可使用拼音搜索，若使用英文名称，请使用完整的姓名进行搜索。
   * Foreign students can use Pinyin search if they use Chinese names. If they use English names, please use the full name to search.
-  * 搜索关键词小于两个字符将按照异常请求处理。
-  * 若未设置分类参数则查询所有分类的数据，**但不可将分类设置为空**。
-  * 当排序主键不存在时，排序方式将不会生效。
-
-* 请求示例：
-
-  ```
-  GET /search/query?key=fhx&type[]=teacher&type[]=student&page_size=5&page_index=1&sort_key=type&sort_order=DESC
-  ```
 
 * 响应示例：
 
@@ -93,7 +130,7 @@
           {
               "teacher_code": "0201130230",
               "name": "返魂香",
-              "type": "teacher",
+              "group": "teacher",
               "title": "副教授",
               "unit": "软件学院",
               "semester_list": [
@@ -108,7 +145,7 @@
           {
               "student_code": "0201130230",
               "name": "范海辛",
-              "type": "student",
+              "group": "student",
               "deputy": "文学院",
               "class": "城地1602",
               "semester_list": [
@@ -486,85 +523,6 @@
           },
           ...
       ]
-  }
-  ```
-
-
-
-## 元数据及其他接口
-
-### 测试连通性
-
-- URL：`/`
-
-- 方法：`GET`
-
-- 请求示例：
-
-  ```
-  GET /
-  ```
-
-- 响应示例：
-
-  ```json
-  {
-      "status": "success",
-      "info": "Hello, world!"
-  }
-  ```
-
-### 服务信息
-
-- URL：`{host}/info/service`
-
-- 方法：`GET`
-
-- 说明：
-
-  - status：响应状态
-  - version：接口版本
-  - service_state：服务状态
-  - service_notice：服务状态描述
-  - data_time：数据更新时间
-
-- 请求示例：
-
-  ```
-  GET /info/service
-  ```
-
-- 响应示例：
-
-  ```json
-  {
-      "status": "success",
-      "version": "0.1.0",
-      "service_state": "running",
-      "service_notice": "服务正常运行",
-      "data_time": "2019-3-24"
-  }
-  ```
-
-- 字段说明：
-    - `status`：请求状态。`success`代表成功。
-    - `version`：API Server 版本号
-    - `data_update_time`：课表数据更新时间
-
-### 健康检查
-
-- URL：`{host}/info/health`
-
-- 方法：`GET`
-
-- 响应示例：
-
-  ```json
-  {
-      "status": "success",
-      "time": 1552675506,
-      "MySQL": true,
-      "MongoDB": true
   }
   ```
 

@@ -31,11 +31,12 @@ sentry_sdk.init(
 )
 
 # DataDog
-patch_all()
-tracer.configure(
-    hostname=app_config["DDOG"]["host"],
-    port=app_config["DDOG"]["port"]
-)
+if app_config["SERVICE_ENV"] != "develop":
+    patch_all()
+    tracer.configure(
+        hostname=app_config["DDOG"]["host"],
+        port=app_config["DDOG"]["port"]
+    )
 
 # 初始化应用
 app = Flask(__name__)
@@ -65,7 +66,7 @@ def hello_world():
         "status": "success",
         "info": "Hello, world!"
     }
-    return jsonify(data)
+    return Util.common_rsp(data)
 
 
 @app.errorhandler(400)

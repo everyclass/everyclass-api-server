@@ -27,6 +27,9 @@ def get_config():
             "port": os.environ.get("DD_TRACE_AGENT_PORT", ""),
         }
 
+        # Run env
+        app_config["SERVICE_ENV"] = run_env
+
         return app_config
     else:
         Util.print_red("Config not exist")
