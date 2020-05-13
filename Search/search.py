@@ -95,13 +95,9 @@ def available_room():
                 room_list.append(room)
         available_room_list = room_list
 
-    for room in available_room_list:
-        room["info"] = room.pop("week%s" % week)
-        room["info"] = json.loads(room["info"])
-
     res = {
         "status": "OK",
-        "room_list": available_room_list
+        "available_room": available_room_list
     }
 
     return jsonify(res)

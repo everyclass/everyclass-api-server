@@ -200,40 +200,36 @@
 
   ```json
   {
-      "room_list": [
-          {
-              "code": "9010102",
-              "info": {
-                  "course_code": "140101X10",
-                  "course_name": "大学物理A（一）",
-                  "lesson": "B19251E6198F44519FD2B0B0C5BD7AC7"
-              },
-              "name": "A座102"
-          },
-          {
-              "code": "9010110",
-              "info": {
-                  "course_code": "090141X20",
-                  "course_name": "数字信号处理",
-                  "lesson": "C0C4782A1A0746C893A19DDBE38E57C4"
-              },
-              "name": "A座110"
-          },
-          {
-              "code": "9010122",
-              "info": {
-                  "course_code": "080211X10",
-                  "course_name": "机械设计",
-                  "lesson": "127A77A68741411986FE6B09D7EF8BAB"
-              },
-              "name": "A座122"
-          },
-          ......
-      ],
-      "status": "OK"
+    "available_room": [
+      {
+        "code": "9010101",
+        "name": "A座101"
+      },
+      {
+        "code": "9010104",
+        "name": "A座104"
+      },
+      {
+        "code": "9010119",
+        "name": "A座119"
+      },
+      {
+        "code": "9010215",
+        "name": "A座215"
+      },
+      {
+        "code": "9010401",
+        "name": "A座401"
+      },
+      {
+        "code": "9010421",
+        "name": "A座421"
+      }
+    ],
+    "status": "OK"
   }
   ```
-
+  
   
 
 ## 信息查询
