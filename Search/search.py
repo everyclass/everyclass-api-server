@@ -5,8 +5,10 @@ import Util
 import Common
 import Search
 from flask import abort
+from flask import url_for
 from flask import jsonify
 from flask import request
+from flask import redirect
 from Search.database import *
 from flask import current_app as app
 
@@ -52,54 +54,4 @@ def search_timetable():
         res["data"].append(data)
 
     return jsonify(res)
-
-
-@Search.search_blue.route('/room/available')
-def available_room():
-    week = request.args.get("week")
-    campus = request.args.get("campus")
-    session = request.args.get("session")
-    building = request.args.get("building")
-    if week is None or session is None:
-        return abort(400)
-
-    week = int(week)
-    week = max(1, week)
-    week = min(week, 20)
-
-    conn = app.mysql_pool.connection()
-    available_room_list = read_available_room(conn, week, session)
-
-    if campus is not None:
-        room_group_dict = Common.read_kvdb(conn, "room_group")
-        room_group_dict = json.loads(room_group_dict)
-
-        if campus not in room_group_dict.keys():
-            return abort(400)
-
-        building_list = room_group_dict[campus]
-
-        if building is not None:
-            if building not in building_list.keys():
-                return abort(400)
-
-            filter_list = building_list[building]
-        else:
-            filter_list = []
-            for item in building_list.values():
-                filter_list += item
-
-        room_list = []
-        for room in available_room_list:
-            if room["code"] in filter_list:
-                room_list.append(room)
-        available_room_list = room_list
-
-    res = {
-        "status": "OK",
-        "available_room": available_room_list
-    }
-
-    return jsonify(res)
-
 

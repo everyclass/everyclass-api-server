@@ -5,13 +5,25 @@ import Util
 import Room
 import Common
 from flask import abort
-from flask import request
+from flask import url_for
 from flask import jsonify
+from flask import request
+from flask import redirect
 from Room.database import *
 from flask import current_app as app
 
 
-@Room.room_blue.route('/')
+@Room.room_blue.route("")
+def room_group_k():
+    return redirect(url_for("room.room_group"))
+
+
+@Room.room_blue.route("/")
+def room_group_x():
+    return redirect(url_for("room.room_group"))
+
+
+@Room.room_blue.route("/group")
 def room_group():
     conn = app.mysql_pool.connection()
 
@@ -21,6 +33,90 @@ def room_group():
     res = {
         "status": "OK",
         "room_group": room_group_dict
+    }
+
+    return jsonify(res)
+
+
+@Room.room_blue.route("/status")
+def room_status():
+    week = request.args.get("week")
+    campus = request.args.get("campus")
+    session = request.args.get("session")
+    building = request.args.get("building")
+    if week is None or session is None:
+        return abort(400)
+
+    week = int(week)
+    week = max(1, week)
+    week = min(week, 20)
+
+    conn = app.mysql_pool.connection()
+    room_status_list = read_active_room(conn, week, session)
+    filter_room_data = read_filter_room_list(conn, campus, building)
+
+    act_room = {}
+    for room in room_status_list:
+        room["data"] = json.loads(room.pop("week%s" % week))
+        room["status"] = "active"
+        act_room[room["code"]] = room
+
+    room_list = []
+    for key, val in filter_room_data.items():
+        if key in act_room.keys():
+            room_list.append(act_room[key])
+        else:
+            room_list.append({
+                "code": key,
+                "name": val,
+                "status": "available"
+            })
+
+    res = {
+        "status": "OK",
+        "room_status": room_list
+    }
+
+    return jsonify(res)
+
+
+@Room.room_blue.route("/available")
+def available_room():
+    week = request.args.get("week")
+    campus = request.args.get("campus")
+    session = request.args.get("session")
+    building = request.args.get("building")
+    if week is None or session is None:
+        return abort(400)
+
+    week = int(week)
+    week = max(1, week)
+    week = min(week, 20)
+
+    conn = app.mysql_pool.connection()
+    room_status_list = read_active_room(conn, week, session)
+    filter_room_data = read_filter_room_list(conn, campus, building)
+
+    act_room = {}
+    for room in room_status_list:
+        room["data"] = json.loads(room.pop("week%s" % week))
+        room["status"] = "active"
+        act_room[room["code"]] = room
+
+    room_list = []
+    for key, val in filter_room_data.items():
+        if key in act_room.keys():
+            continue
+        else:
+            room_list.append({
+                "code": key,
+                "name": val,
+                "status": "available"
+            })
+
+    res = {
+        "status": "OK",
+        "available_room": room_list
     }
 
     return jsonify(res)
