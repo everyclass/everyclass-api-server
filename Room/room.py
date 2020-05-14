@@ -14,15 +14,7 @@ from flask import current_app as app
 
 
 @Room.room_blue.route("")
-def room_group_k():
-    return redirect(url_for("room.room_group"))
-
-
 @Room.room_blue.route("/")
-def room_group_x():
-    return redirect(url_for("room.room_group"))
-
-
 @Room.room_blue.route("/group")
 def room_group():
     conn = app.mysql_pool.connection()
