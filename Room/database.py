@@ -39,7 +39,7 @@ def read_filter_room_list(conn, campus, building):
 # 读取指定节次空教室
 def read_active_room(conn, week, session):
     cursor = conn.cursor(pymysql.cursors.DictCursor)
-    sql = "SELECT `code`,`name`,`week%s` FROM `act_room` " \
+    sql = "SELECT `code`,`name`,`week%s` FROM `avl_room` " \
           "WHERE `session`=%s AND `week%s` !=''"
     cursor.execute(sql, args=[week, session, week])
     return cursor.fetchall()

@@ -47,16 +47,16 @@ def room_status():
     room_status_list = read_active_room(conn, week, session)
     filter_room_data = read_filter_room_list(conn, campus, building)
 
-    act_room = {}
+    avl_room = {}
     for room in room_status_list:
         room["data"] = json.loads(room.pop("week%s" % week))
         room["status"] = "active"
-        act_room[room["code"]] = room
+        avl_room[room["code"]] = room
 
     room_list = []
     for key, val in filter_room_data.items():
-        if key in act_room.keys():
-            room_list.append(act_room[key])
+        if key in avl_room.keys():
+            room_list.append(avl_room[key])
         else:
             room_list.append({
                 "code": key,
@@ -89,15 +89,15 @@ def available_room():
     room_status_list = read_active_room(conn, week, session)
     filter_room_data = read_filter_room_list(conn, campus, building)
 
-    act_room = {}
+    avl_room = {}
     for room in room_status_list:
         room["data"] = json.loads(room.pop("week%s" % week))
         room["status"] = "active"
-        act_room[room["code"]] = room
+        avl_room[room["code"]] = room
 
     room_list = []
     for key, val in filter_room_data.items():
-        if key in act_room.keys():
+        if key in avl_room.keys():
             continue
         else:
             room_list.append({

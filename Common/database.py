@@ -33,9 +33,9 @@ def read_lesson_data(conn, code, group, semester):
         `lesson`.`teacher_list`
     FROM
         `link`
-        LEFT JOIN `lesson` ON `link`.`lesson` = `lesson`.`code` 
-        AND `link`.`session` = `lesson`.`session` 
-        AND `link`.`semester` = `lesson`.`semester` 
+        LEFT JOIN `lesson` ON `link`.`semester` = `lesson`.`semester` 
+        AND `link`.`lesson` = `lesson`.`code` 
+        AND `link`.`session` = `lesson`.`session`
     WHERE
         `link`.`object` = %s 
         AND `link`.`group` = %s 
